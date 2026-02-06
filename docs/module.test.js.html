@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: module.test.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: module.test.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { calculateAge } from './module.js';
+
+let people20years;
+beforeEach(() => {
+    let date = new Date();
+    people20years = {
+        birth: new Date(date.setFullYear(date.getFullYear() - 20))
+    };
+});
+let people18years;
+beforeEach(() => {
+    let date = new Date();
+    people18years = {
+        birth: new Date(date.setFullYear(date.getFullYear() - 18))
+    };
+});
+/**
+ * @function calculateAge
+ * Tests unitaires pour la fonction calculateAge
+ * La fonction doit retourner l'âge d'une personne en années, en fonction de sa date de naissance.
+
+ */
+
+/*
+ * Les tests vérifient les cas suivants :
+ * - L'âge correct est retourné pour une date de naissance valide.
+ * - Une erreur est levée si le paramètre p est manquant.
+ * - Une erreur est levée si le paramètre p n'est pas un objet.
+ * - Une erreur est levée si l'objet p ne contient pas de paramètre birth.
+ * - Une erreur est levée si le paramètre birth n'est pas un objet Date.
+ * - Une erreur est levée si la date de naissance est invalide.
+ * - Une erreur est levée si la date de naissance est dans le futur.
+ * - L'âge correct est retourné pour une personne ayant exactement 20 ans.
+ * - L'âge correct est retourné pour une personne ayant moins de 18 ans.
+*/
+
+describe('calculateAge Unit Test Suites', () => {
+    // Age correct
+    it('should return a correct age', () => {
+        const chloe = {
+            birth: new Date('08/17/2004')
+        };
+        expect(calculateAge(chloe)).toEqual(21)
+    });
+    // Paramètre p manquant
+    it('should throw a "missing param p" error', () => {
+        expect(() => calculateAge()).toThrow('missing param p');
+    });
+    // Paramètre p n'est pas un objet
+    it('should thorw a "param p should be an object" error', () => {
+        const chloe = {
+            birth: new Date('08/17/2004')
+        };
+        expect(typeof calculateAge(chloe)).not.toBe('object');
+    });
+    // Paramètre birth manquant
+    it('should throw a "object p should have a birth parameter" error', () => {
+        const chloe = {
+            birth: new Date('08/17/2004')
+        };
+        expect(chloe).toHaveProperty('birth');
+    });
+    // Paramètre birth n'est pas un objet Date
+    it('should throw a "birth parameter should be a Date object" error', () => {
+        const chloe = {
+            birth: new Date('08/17/2004')
+        };
+        expect(chloe.birth).toBeInstanceOf(Date);
+    });
+    // Date de naissance invalide
+    it('should throw a "birth date is invalid" error', () => {
+        const chloe = {
+            birth: new Date('invalid date')
+        };
+        expect(chloe.birth.toString()).toBe('Invalid Date');
+    });
+    // Date de naissance dans le futur
+    it('should throw a "birth date is in the future" error', () => {
+        const chloe = {
+            birth: new Date('08/17/3000')
+        };
+        expect(chloe.birth.getTime()).toBeGreaterThan(Date.now());
+    });
+    // Exactement 20 ans
+    it('should return a correct age', () => {
+        expect(calculateAge(people20years)).toEqual(20);
+    });
+    // Plus de 18 ans
+    it('should return if user has less than 18 years', () => {
+        expect(calculateAge(people18years)).toBeLessThan(18);
+    });
+    
+});
+
+/**
+ * @function validatePostalCode
+ * Tests unitaires pour la validation du code postal
+ */
+
+/*
+ * Le code postal doit être une chaîne de caractères composée de 5 chiffres
+ * Les tests vérifient les cas suivants :
+ * - La validation retourne true pour un code postal valide.
+ * - La validation retourne false pour un code postal invalide.
+ * - La validation retourne true pour un code postal de 5 chiffres.
+ * - La validation retourne false pour un code postal de moins de 5 chiffres.
+ * - La validation retourne false pour un code postal de plus de 5 chiffres.
+*/
+
+describe('postal code validation', () => {
+
+    it('should return true if postal code is valid', () => {
+        const postalCode = '75001';
+        expect(/^\d{5}$/.test(postalCode)).toBe(true);
+    });
+
+    it('should return false if postal code is invalid', () => {
+        const postalCode = '7500A';
+        expect(/^\d{5}$/.test(postalCode)).toBe(false);
+    });
+
+    it('should return True if postal code has 5 digits', () => {
+        const postalCode = '75001';
+        expect(postalCode.length).toBe(5);
+    });
+
+    it('should return False if postal code has less than 5 digits', () => {
+        const postalCode = '7500';
+        expect(postalCode.length).toBeLessThan(5);
+    });
+
+    it('should return False if postal code has more than 5 digits', () => {
+        const postalCode = '750001';
+        expect(postalCode.length).toBeGreaterThan(5);
+    });
+
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calculateAge">calculateAge</a></li><li><a href="global.html#calculateAgeTestsunitairespourlafonctioncalculateAgeLafonctiondoitretournerl'%25C3%25A2ged'unepersonneenann%25C3%25A9es,enfonctiondesadatedenaissance.">calculateAgeTests unitaires pour la fonction calculateAgeLa fonction doit retourner l'âge d'une personne en années, en fonction de sa date de naissance.</a></li><li><a href="global.html#validatePostalCode">validatePostalCode</a></li><li><a href="global.html#validatePostalCodeTestsunitairespourlavalidationducodepostal">validatePostalCodeTests unitaires pour la validation du code postal</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Feb 06 2026 12:10:34 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
