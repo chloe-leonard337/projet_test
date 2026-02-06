@@ -10,7 +10,9 @@ import { calculateAge, verifyIdentity, validatePostalCode,verifyEmail } from "./
  * 
  * Cette fonction valide les paramètres d'un formulaire en vérifiant l'âge, le code postal, l'identité et l'email.
  */
+
 function validateForm(age, postalCode, identity, email) {
+
     try {
         const ageValue = calculateAge(age);
         if (ageValue < 18) {
@@ -19,9 +21,10 @@ function validateForm(age, postalCode, identity, email) {
     } catch (error) {
         throw new Error('user should be at least 18 years old');
     }
+
+
     try {
         validatePostalCode(postalCode);
-        
     } catch (error) {
         throw new Error('postal code is invalid');
     }
@@ -38,6 +41,7 @@ function validateForm(age, postalCode, identity, email) {
         throw new Error('email is invalid');
     }
 
+    
     return true;
 }
 
