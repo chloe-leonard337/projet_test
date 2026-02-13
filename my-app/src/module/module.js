@@ -68,6 +68,33 @@ function validatePostalCode(postalCode) {
     return true;
 }
 
+function validateCity(city) {
+
+    // Le paramètre city doit être défini
+    if (!city || city.length === 0 || city === undefined) {
+        throw new Error('city should not be empty');
+    }
+
+    // La ville doit être une chaîne de caractères
+    if (typeof city !== 'string') {
+        throw new Error('param city should be a string');
+    }
+    
+    //protection contre les attaques XSS
+    if (city.match(/<script.*?>.*?<\/script>/i)) {
+        throw new Error('city should not contain script tags');
+    }
+
+    //ne contenir que des lettres et espaces
+    if (!/^[a-zA-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿ\s'-]+$/.test(city)) {
+        throw new Error('city should only contain letters and spaces');
+    }
+
+
+    return true;
+
+}
+
 
 
 function verifyIdentity(identity) {
@@ -132,4 +159,4 @@ function verifyEmail(email) {
     return true;
 }
 
-export { calculateAge, validatePostalCode, verifyIdentity, verifyEmail };
+export { calculateAge, validatePostalCode, verifyIdentity, verifyEmail, validateCity };

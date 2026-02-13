@@ -1,4 +1,4 @@
-import { calculateAge, validatePostalCode, verifyIdentity,verifyEmail } from './module.js';
+import { calculateAge, validatePostalCode, verifyIdentity,verifyEmail, validateCity } from './module.js';
 
 let people20years;
 beforeEach(() => {
@@ -138,6 +138,61 @@ describe('postal code validation', () => {
     it('should return error if postal code is empty', () => {
         const postalCode = '';
         expect(() => validatePostalCode(postalCode)).toThrow('postal code should not be empty');
+    });
+
+});
+
+/**
+ * @function validateCity
+ */
+
+describe('city validation', () => {
+    // La ville est valide
+    it('should return true if city is valid', () => {
+        const city = 'Paris';
+        expect(validateCity(city)).toBe(true);
+    });
+
+    // La ville est invalide
+    it('should return error if city is invalid', () => {
+        const city = '';
+        expect(() => validateCity(city)).toThrow('city should not be empty');
+    });
+
+    // La ville est vide
+    it('should return error if city is empty', () => {
+        const city = '';
+        expect(() => validateCity(city)).toThrow('city should not be empty');
+    });
+
+    // La ville n'est une chaine de caractères
+    it('should return error if city is not a string', () => {
+        const city = 123;
+        expect(() => validateCity(city)).toThrow('param city should be a string');
+    });
+
+    // La ville est composée de plusieurs mots
+    it('should return true if city is composed of multiple words', () => {
+        const city = 'New York';
+        expect(validateCity(city)).toBe(true);
+    });
+
+    // La ville est composée de caractères spéciaux
+    it('should return true if city is composed of special characters', () => {
+        const city = 'Saint-Étienne';
+        expect(validateCity(city)).toBe(true);
+    });
+
+    // La ville est composée de chiffres
+    it('should return false if city is composed of numbers', () => {
+        const city = 'Paris123';
+        expect(() => validateCity(city)).toThrow('city should only contain letters and spaces');
+    });
+
+    // La ville contient des balises de script
+    it('should return error if city contains script tags', () => {
+        const city = '<script>alert("XSS")</script>';
+        expect(() => validateCity(city)).toThrow('city should not contain script tags');
     });
 
 });
