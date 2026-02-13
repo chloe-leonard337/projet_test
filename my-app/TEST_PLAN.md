@@ -15,8 +15,8 @@
 
 ###  Choix entre UT et IT
 
-# Les tests unitaires vérifient le fonctionnement de chaque fonction indépendantes. Ils sont donc principalement présents dans module/validator.test.js et module/module.test.js.
-# Pour tester le formulaire, j'ai choisi de réutiliser les fonctions qui ont été testés précédemment, j'ai donc pu me concentrer principalement sur la gestion et l'intégration des données. Pour cela, j'utilise des tests d'inégrations qui me permettent de vérifier le bon fonctionnement du formulaire (affichage d'erreurs si les valeurs entrées sont incorrectes, désactivation du bouton tant que des données ne sont pas correctes, vérification de l'incrémentation du compteur lorsqu'une inscription est compléter, ....)
+Les tests unitaires vérifient le fonctionnement de chaque fonction indépendantes. Ils sont donc principalement présents dans module/validator.test.js et module/module.test.js.
+Pour tester le formulaire, j'ai choisi de réutiliser les fonctions qui ont été testés précédemment, j'ai donc pu me concentrer principalement sur la gestion et l'intégration des données. Pour cela, j'utilise des tests d'inégrations qui me permettent de vérifier le bon fonctionnement du formulaire (affichage d'erreurs si les valeurs entrées sont incorrectes, désactivation du bouton tant que des données ne sont pas correctes, vérification de l'incrémentation du compteur lorsqu'une inscription est compléter, ....)
 
 ---
 
