@@ -33,7 +33,14 @@ jobs:
       - name: Generate JSDocs
         run : |
           cd my-app
-          npm run jsdoc
+          echo "=== Avant JSDoc ==="
+          ls -la public/
+          echo "=== Lancement npm run jsdoc ==="
+          npm run jsdoc || echo "❌ JSDoc a échoué"
+          echo "=== Après JSDoc ==="
+          ls -la public/ || echo "Dossier public/ n'existe pas"
+          ls -la public/docs/ 2>/dev/null || echo "❌ public/docs/ n'existe PAS"
+          
         continue-on-error: true
         
       - name: Upload coverage reports to codecov
