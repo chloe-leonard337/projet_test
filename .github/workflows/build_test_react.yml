@@ -33,7 +33,6 @@ jobs:
       - name: Generate JSDocs
         run : |
           cd my-app
-          npm install --save-dev jsdoc 
           npm run jsdoc
         continue-on-error: true
         
@@ -56,7 +55,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: jsdoc-docs
-          path: my-app/docs/
+          path: my-app/public/docs/
   deploy:
     needs: build_test
     permissions:
