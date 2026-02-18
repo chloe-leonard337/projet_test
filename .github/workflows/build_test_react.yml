@@ -12,25 +12,25 @@ jobs:
       matrix:
         node_version: [21.x]
     steps:
-      - uses: actions/checkout@v4  # ✅ v4
+      - uses: actions/checkout@v4 
       - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v4  # ✅ v4
+        uses: actions/setup-node@v4  
         with:
           node-version: ${{ matrix.node_version }}
           cache: 'npm'
           
-      - name: Install, build, test & JSDoc  # ✅ TOUT EN UN
+      - name: Install, build, test & JSDoc  
         run: |
           cd my-app
           npm ci
           npm run build --if-present
           npm test
-          npm run jsdoc  # ✅ Depuis RACINE (my-app/)
+          npm run jsdoc 
           echo "=== Vérification docs ==="
           ls -la public/docs/ || echo "❌ Docs non générées"
           
       - name: Upload coverage reports to codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: "my-app"
@@ -40,7 +40,7 @@ jobs:
         uses: actions/configure-pages@v5  
         
       - name: Upload artifact UNIQUE (build + docs) 
-        uses: actions/upload-pages-artifact@v5  
+        uses: actions/upload-pages-artifact@v4  
         with:
           path: my-app/build  
   deploy:
@@ -54,8 +54,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download artifact
-        uses: actions/download-pages-artifact@v5  
+        uses: actions/download-pages-artifact@v4  
         
       - name: Deploy to github pages
         id: deployment
-        uses: actions/deploy-pages@v5  
+        uses: actions/deploy-pages@v4  
