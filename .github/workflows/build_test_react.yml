@@ -39,6 +39,7 @@ jobs:
         with:
           path: my-app/build
   deploy:
+    needs: build_test
     permissions:
       pages: write
       id-token: write
