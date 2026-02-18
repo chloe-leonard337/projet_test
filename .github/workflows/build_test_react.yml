@@ -33,7 +33,9 @@ jobs:
       - name: Generate JSDocs
         run : |
           cd my-app
+          npm install --save-dev jsdoc 
           npm run jsdoc
+        continue-on-error: true
         
       - name: Upload coverage reports to codecov
         uses: codecov/codecov-action@v5
@@ -49,6 +51,12 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: my-app/build
+          
+      - name: Upload JSDoc artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jsdoc-docs
+          path: my-app/docs/
   deploy:
     needs: build_test
     permissions:
