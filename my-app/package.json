@@ -11,13 +11,15 @@
     "react-dom": "^19.2.4",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yaml": "^2.8.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test  --coverage --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --collectCoverageFrom=!src/logo.svg",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test  --coverage --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --collectCoverageFrom=!src/logo.svg --watchAll=false",
+    "eject": "react-scripts eject",
+    "jsdoc": "jsdoc -c ./jsdoc.config.json -r -d ./docs"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +43,7 @@
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-react": "^7.28.5",
+    "jsdoc": "^4.0.5",
     "react-test-renderer": "^19.2.4"
   }
 }
