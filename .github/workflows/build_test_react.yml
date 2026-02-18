@@ -35,7 +35,9 @@ jobs:
           npm test
 
       - name: generate js docs
-        run: npm run jsdoc
+        run: |
+          cd my-app
+          npm run jsdoc
           
       - name: Upload coverage reports to codecov
         uses: codecov/codecov-action@v3
