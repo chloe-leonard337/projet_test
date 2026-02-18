@@ -29,7 +29,10 @@ jobs:
           npm ci
           npm run build --if-present
           npm test
-
+          
+      - name: Generate JSDocs
+        run : npm run jsdoc
+        
       - name: Upload coverage reports to codecov
         uses: codecov/codecov-action@v5
         with:
