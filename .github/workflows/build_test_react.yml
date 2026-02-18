@@ -34,12 +34,7 @@ jobs:
         run : |
           cd my-app/public
           npm run jsdoc
-          ls
-          ls 
-          ls -la docs/ 2>/dev/null || echo "❌ docs/ n'existe PAS"
           
-        continue-on-error: true
-        
       - name: Upload coverage reports to codecov
         uses: codecov/codecov-action@v5
         with:
@@ -58,8 +53,7 @@ jobs:
       - name: Upload JSDoc artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          name: jsdoc-docs
-          path: my-app/public/docs/
+          path: my-app/public/
   deploy:
     needs: build_test
     permissions:
