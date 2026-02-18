@@ -53,7 +53,7 @@ jobs:
           path: my-app/build
           
       - name: Upload JSDoc artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v3
         with:
           name: jsdoc-docs
           path: my-app/docs/
