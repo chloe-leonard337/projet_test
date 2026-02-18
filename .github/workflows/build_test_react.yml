@@ -34,6 +34,7 @@ jobs:
         run : |
           cd my-app/public
           npm run jsdoc
+          ls
           ls -la public/ || echo "Dossier public/ n'existe pas"
           ls -la public/docs/ 2>/dev/null || echo "❌ public/docs/ n'existe PAS"
           
