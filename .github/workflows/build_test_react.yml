@@ -33,6 +33,8 @@ jobs:
           npm ci
           npm run jsdoc
           ls
+          mkdir -p public/docs
+          cp -r docs/* public/docs/
           echo "=== Vérification structure ==="  
           ls -la my-app/public/docs/ || echo "Docs manquantes"
           ls -la my-app/build/docs/ || echo "Build/docs manquante"  
