@@ -32,6 +32,11 @@ jobs:
           cd my-app
           npm ci
           npm run jsdoc
+          ls
+          echo "=== Vérification structure ==="  
+          ls -la my-app/public/docs/ || echo "Docs manquantes"
+          ls -la my-app/build/docs/ || echo "Build/docs manquante"  
+       
           npm run build --if-present
           npm test
 
