@@ -27,6 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm ci and test
         run: |
+          cd my-app
           npm ci
           npm run build --if-present
           npm test
@@ -40,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: my-app/build
   deploy:
     needs: build_test
     permissions: 
