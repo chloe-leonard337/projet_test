@@ -16,18 +16,19 @@ function Form({ onSubmitSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  const errorMessages = {
-    firstName: 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres',
-    lastName: 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres',
-    email: 'Email invalide',
-    dob: 'Vous devez avoir au moins 18 ans',
-    city: 'Veuillez saisir une ville valide',
-    postalCode: 'Veuillez entrer un code postal valide (5 chiffres)'
-    };
 
 
   // Validation en temps réel pour chaque champ
   const validateField = useCallback((name, value) => {
+    
+    const errorMessages = {
+      firstName: 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres',
+      lastName: 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres',
+      email: 'Email invalide',
+      dob: 'Vous devez avoir au moins 18 ans',
+      city: 'Veuillez saisir une ville valide',
+      postalCode: 'Veuillez entrer un code postal valide (5 chiffres)'
+    };
     const newErrors = { ...errors };
 
     try {
@@ -102,6 +103,8 @@ function Form({ onSubmitSuccess }) {
             );
             delete newErrors[name];
           }
+          break;
+        default:
           break;
       }
     } catch (error) {
