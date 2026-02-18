@@ -108,21 +108,30 @@ function Form({ onSubmitSuccess }) {
           break;
       }
     } catch (error) {
-        if (name === 'firstName' || name === 'lastName') {
-            newErrors[name] = errorMessages[name];
-        } else if (name === 'email') {
-            newErrors[name] = errorMessages.email;
-        } else if (name === 'dob') {
-            newErrors[name] = errorMessages.dob;
-        } else if (name === 'city') {
-            newErrors[name] = errorMessages.city;
-        } else if (name === 'postalCode') {
-            newErrors[name] = errorMessages.postalCode;
+      switch (name) {
+          case 'firstName':
+          case 'lastName':
+            newErrors[name] = 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres';
+            break;
+          case 'email':
+            newErrors[name] = 'Email invalide';
+            break;
+          case 'dob':
+            newErrors[name] = 'Vous devez avoir au moins 18 ans';
+            break;
+          case 'city':
+            newErrors[name] = 'Veuillez saisir une ville valide';
+            break;
+          case 'postalCode':
+            newErrors[name] = 'Veuillez entrer un code postal valide (5 chiffres)';
+            break;
+          default:
+            newErrors[name] = 'Erreur de validation';
         }
     }
 
     setErrors(newErrors);
-  }, [formData.firstName, formData.lastName, errors, errorMessages]);
+  }, [formData.firstName, formData.lastName, errors]);
 
   // Validation complète du formulaire
   const isFormValid = useCallback(() => {
