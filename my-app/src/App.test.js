@@ -2,8 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
 
+/**
+ * @function App
+ */
 
-// Test que le formulaire se soumet correctement avec des données valides
 test('submits form with valid data', async () => {
     render(<App />);
     userEvent.type(screen.getByLabelText(/Prénom/i), 'John');

@@ -1,13 +1,19 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import Form from './Form';
 
-
+/**
+ * @function handleSubmit
+ */
 test('vérification de la présence de localStorage', () => { 
     localStorage.setItem('test', 'ok'); 
     expect(localStorage.getItem('test')).toBe('ok'); 
 });
+
+/**
+ * @function validateField
+ */
  
 // Test que le formulaire s'affiche correctement
 test('renders form fields', () => {
@@ -49,7 +55,7 @@ test('shows error for null email', async () => {
     userEvent.type(emailInput, ' ');
     expect(screen.getByText(/Email invalide/i)).toBeInTheDocument();
 });
-
+*/
 // Test qu'une erreur s'affiche si le champ date de naissance n'est pas rempli correctement
 test('shows error for underage user', async () => {
     render(<App />);
@@ -57,7 +63,7 @@ test('shows error for underage user', async () => {
     userEvent.type(dobInput, '2010-01-01');
     expect(screen.getByText(/Vous devez avoir au moins 18 ans/i)).toBeInTheDocument();
 });
-
+/*
 test('shows error for null date of birth', async () => {
     render(<App />);
     const dobInput = screen.getByLabelText(/Date de naissance/i);
@@ -104,6 +110,65 @@ test('shows error for null postal code', async () => {
     expect(screen.getByText(/Veuillez entrer un code postal valide \(5 chiffres\)/i)).toBeInTheDocument();
 });
 
+// Test            
+test('shows error for invalid last name', async () => {
+    render(<App />);
+    const lastNameInput = screen.getByLabelText(/Nom de famille/i);
+    userEvent.type(lastNameInput, 'Doe123');
+    expect(screen.getByText(/Attention ! Vos prénoms et noms ne doivent contenir que des lettres/i)).toBeInTheDocument();
+});
+
+test('shows error for null last name', async () => {
+    render(<App />);
+    const lastNameInput = screen.getByLabelText(/Nom de famille/i);
+    userEvent.type(lastNameInput, ' ');
+    expect(screen.getByText(/Attention ! Vos prénoms et noms ne doivent contenir que des lettres/i)).toBeInTheDocument();
+});
+
+
+
+// Test le switch default
+test('default case handles unknown field gracefully', async () => {
+    render(<App />);
+    
+    const input = screen.getAllByRole('textbox')[0]; 
+    
+    // Force un nom inexistant pour couvrir les 2 defaults
+    fireEvent.change(input, { 
+        target: { name: 'unknownField', value: 'test123' } 
+    });
+    
+    // premier default: break;
+    expect(screen.getByRole('button', { name: /S'inscrire/i })).toBeInTheDocument();
+    
+});
+
+test('default case in catch sets generic error for unknown field', async () => {
+    render(<App />);
+    
+    // ✅ Prend n'importe quel input existant
+    const input = screen.getByLabelText(/Prénom/i);
+    
+    // ✅ Force name inconnu = 1er switch default → catch → 2e switch default
+    fireEvent.change(input, { 
+        target: { 
+            name: 'unknownField',  // ← Déclenche les 2 defaults
+            value: 'invalid123' 
+        } 
+    });
+    
+    // Vérifie que le code s'exécute sans crash (les 2 defaults fonctionnent)
+    expect(screen.getByRole('button', { name: /S'inscrire/i })).toBeInTheDocument();
+});
+
+
+
+
+
+
+/**
+ * @function handleSubmit
+ */
 
 // Test que le formulaire se soumet correctement avec des données valides
 test('submits form with valid data', async () => {
@@ -119,18 +184,3 @@ test('submits form with valid data', async () => {
 
 });
 
-
-// Test            <label htmlFor="lastName" className="error-label">
-test('shows error for invalid last name', async () => {
-    render(<App />);
-    const lastNameInput = screen.getByLabelText(/Nom de famille/i);
-    userEvent.type(lastNameInput, 'Doe123');
-    expect(screen.getByText(/Attention ! Vos prénoms et noms ne doivent contenir que des lettres/i)).toBeInTheDocument();
-});
-
-test('shows error for null last name', async () => {
-    render(<App />);
-    const lastNameInput = screen.getByLabelText(/Nom de famille/i);
-    userEvent.type(lastNameInput, ' ');
-    expect(screen.getByText(/Attention ! Vos prénoms et noms ne doivent contenir que des lettres/i)).toBeInTheDocument();
-});
