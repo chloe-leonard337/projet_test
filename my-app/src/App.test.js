@@ -1,7 +1,21 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
-import UserEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 
+
+// Test que le formulaire se soumet correctement avec des données valides
+test('submits form with valid data', async () => {
+    render(<App />);
+    userEvent.type(screen.getByLabelText(/Prénom/i), 'John');
+    userEvent.type(screen.getByLabelText(/Nom de famille/i), 'Doe');
+    userEvent.type(screen.getByLabelText(/Email/i), 'john.doe@example.com');
+    userEvent.type(screen.getByLabelText(/Date de naissance/i), '1990-01-01');
+    userEvent.type(screen.getByLabelText(/Ville/i), 'Paris');
+    userEvent.type(screen.getByLabelText(/Code postal/i), '75001');
+    userEvent.click(screen.getByRole('button', { name: /S'inscrire/i }));
+    expect(screen.getByTestId('count')).toHaveTextContent("1");
+
+});
 
 /*
 test('renders learn react link', () => {
