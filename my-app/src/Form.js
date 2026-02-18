@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import validateForm from './module/validator.js';
 import './Form.css';
@@ -20,15 +20,7 @@ function Form({ onSubmitSuccess }) {
 
   // Validation en temps réel pour chaque champ
   const validateField = useCallback((name, value) => {
-    
-    const errorMessages = {
-      firstName: 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres',
-      lastName: 'Attention ! Vos prénoms et noms ne doivent contenir que des lettres',
-      email: 'Email invalide',
-      dob: 'Vous devez avoir au moins 18 ans',
-      city: 'Veuillez saisir une ville valide',
-      postalCode: 'Veuillez entrer un code postal valide (5 chiffres)'
-    };
+
     const newErrors = { ...errors };
 
     try {
