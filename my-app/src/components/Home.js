@@ -6,7 +6,6 @@ import './Home.css';
 const Home = ({ users, userCount }) => {
   const [localUsers, setLocalUsers] = useState([]);
   const [localCount, setLocalCount] = useState(0);
-  const [lastUser, setLastUser] = useState(null);
 // Styles pour le tableau (à ajouter en haut du composant)
 const tableHeaderStyle = {
   padding: '8px 6px',
