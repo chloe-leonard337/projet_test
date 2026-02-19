@@ -16,7 +16,7 @@ function App() {
         
         <Routes>
           <Route 
-            path="/ 
+            path="/"
             element={<Home users={users} userCount={users.length} />} 
           />
           <Route 
