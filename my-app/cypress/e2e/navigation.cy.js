@@ -54,7 +54,7 @@ describe('Tests E2E Navigation', { testIsolation: false }, () => {
     });
 
     // Navigation vers Formulaire
-    cy.visit('http://localhost:3000/register');
+    cy.visit('http://localhost:3000/#/register');
     cy.contains('Ajouter un nouvel utilisateur').should('be.visible');
     
     // Tentative invalide : email déjà pris + champs vides
