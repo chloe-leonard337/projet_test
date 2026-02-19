@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Register from "./components/Register";
 import { useState } from "react";
@@ -11,7 +11,7 @@ function App() {
   };
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <div className="App">
         
         <Routes>
@@ -25,7 +25,7 @@ function App() {
           />
         </Routes>
       </div>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 
