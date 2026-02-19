@@ -4,7 +4,7 @@ describe('Tests E2E Navigation', { testIsolation: false }, () => {
     // On commence sans utilisateur
     cy.clearLocalStorage('users');
 
-    cy.visit('http://localhost:3000/');
+    cy.visit('http://localhost:3000/#/');
     cy.contains('Bienvenue sur votre annuaire').should('be.visible');
     cy.window().its('localStorage').invoke('getItem', 'users')
     .then((usersStr) => {
@@ -54,7 +54,7 @@ describe('Tests E2E Navigation', { testIsolation: false }, () => {
     });
 
     // Navigation vers Formulaire
-    cy.visit('http://localhost:3000/register');
+    cy.visit('http://localhost:3000/#/register');
     cy.contains('Ajouter un nouvel utilisateur').should('be.visible');
     
     // Tentative invalide : email déjà pris + champs vides
