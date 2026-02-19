@@ -16,7 +16,7 @@ function App() {
         
         <Routes>
           <Route 
-            index 
+            path="/ 
             element={<Home users={users} userCount={users.length} />} 
           />
           <Route 
