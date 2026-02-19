@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://chloe-leonard337.github.io/projet_test/",
+  "homepage": "https://chloe-leonard337.github.io/projet_test/#/",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
