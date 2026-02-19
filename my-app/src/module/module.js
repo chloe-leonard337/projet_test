@@ -156,6 +156,7 @@ function verifyEmail(email) {
         throw new Error('email parameter should be a valid email address');
     }
 
+
     return true;
 }
 

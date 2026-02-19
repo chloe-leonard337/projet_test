@@ -1,43 +1,31 @@
-import { useState } from 'react';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import Form from './Form';
-import './App.css';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Home from "./components/Home";
+import Register from "./components/Register";
+import { useState } from "react";
 
 function App() {
-  const [usersCount, setUsersCount] = useState(0);
-  const [lastUser, setLastUser] = useState(null);
+  const [users, setUsers] = useState([]);
 
-  const handleSubmitSuccess = (userData) => {
-    setLastUser(userData);
-    setUsersCount(prev => prev + 1);
+  const addUser = (newUser) => {
+    setUsers([...users, newUser]);
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Formulaire d'inscription</h1>
-        <p>Nombre d'inscriptions: <span data-testid="count">{usersCount}</span></p>
-        {lastUser && (
-          <p>Dernier inscrit: {lastUser.firstName} {lastUser.lastName}</p>
-        )}
-      </header>
-      <Form onSubmitSuccess={handleSubmitSuccess} />
-
-      <ToastContainer 
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        
+        <Routes>
+          <Route 
+            path="/" 
+            element={<Home users={users} userCount={users.length} />} 
+          />
+          <Route 
+            path="/register" 
+            element={<Register onUserAdded={addUser} />} 
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
