@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import validateForm from './module/validator.js';
 import './Form.css';
+import { PostUser } from './api.js';
 
 function Form({ onSubmitSuccess }) {
   const [formData, setFormData] = useState({
@@ -150,23 +151,14 @@ function Form({ onSubmitSuccess }) {
       const identity = { name: `${formData.firstName} ${formData.lastName}`.trim() };
       validateForm(age, formData.postalCode, formData.city, identity, formData.email);
 
-      // ✅ userData SEULEMENT (PAS localStorage)
       const userData = { 
         ...formData, 
         fullName: identity.name,
         timestamp: Date.now() 
       };
 
-      // ✅ APPEL PARENT (Register gère localStorage)
       onSubmitSuccess(userData);
-      
-      // Toaster succès
-      toast.success('Inscription réussie !', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-      });
-      
+
       // Reset formulaire
       setFormData({
         firstName: '', lastName: '', email: '', dob: '', city: '', postalCode: ''

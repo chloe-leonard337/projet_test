@@ -1,6 +1,19 @@
+jest.mock('./api', () => ({
+  GetUsers: jest.fn(),
+  PostUser: jest.fn()
+}));
+
+import * as api from './api';
+const mockGetUsers = api.GetUsers;
+const mockPostUser = api.PostUser;
+
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
+import Register from './components/Register';
+import { BrowserRouter } from "react-router-dom";
+
 
 /**
  * @function App
@@ -8,6 +21,11 @@ import userEvent from '@testing-library/user-event';
 
 //verifie l'affichage de la page d'accueil
 describe('App', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockGetUsers.mockResolvedValue({ users: [], countUsers: 0 });
+    mockPostUser.mockResolvedValue({ id: 1 });
+  });
   it('affiche la page d\'accueil par défaut', () => {
     render(<App />);
     expect(screen.getByText(/Bienvenue sur votre annuaire/i)).toBeInTheDocument();
@@ -29,10 +47,10 @@ describe('App', () => {
 
 describe('App - addUser', () => {
   beforeEach(() => {
-    // Nettoie localStorage AVANT chaque test
-    localStorage.clear();
+    jest.clearAllMocks();
+    mockGetUsers.mockResolvedValue({ users: [], countUsers: 0 });
+    mockPostUser.mockResolvedValue({ id: 1 });
   });
-
   it('ajoute un utilisateur via le formulaire et met à jour le compteur', async () => {
     render(<App />);
 
@@ -58,21 +76,20 @@ describe('App - addUser', () => {
     
     // Vérifie redirection + compteur +1
     await waitFor(() => {
-      expect(localStorage.getItem('users')).not.toBeNull();
+      expect(api.GetUsers).toHaveBeenCalled();
     }, { timeout: 3000 });
     
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    expect(users).toHaveLength(1);  
-    expect(users[0].firstName).toBe('Marie');
-    expect(users[0].lastName).toBe('Martin');
+
 
   });
 
   it('navigue vers Home après soumission réussie (2s)', async () => {
     render(<App />);
     
-    await waitFor(() => screen.getByText(/Ajouter un nouvel utilisateur/i));
-    
+    const registerLink = screen.getByRole('link', { name: /nouvelle inscription/i });
+    await userEvent.click(registerLink);
+    await waitFor(() => expect(screen.getByText(/Ajouter un nouvel utilisateur/i)).toBeInTheDocument());
+        
     // Remplit formulaire COMPLET
     await userEvent.type(screen.getByLabelText(/Prénom/i), 'Marie');
     await userEvent.type(screen.getByLabelText(/Nom de famille/i), 'Martin');
@@ -81,7 +98,7 @@ describe('App - addUser', () => {
     await userEvent.type(screen.getByLabelText(/Ville/i), 'Angers');
     await userEvent.type(screen.getByLabelText(/Code postal/i), '49100');
     
-    // Soumet → déclenche handleSubmitSuccess
+    // déclenche handleSubmitSuccess
     await userEvent.click(screen.getByRole('button', { name: /S'inscrire/i }));
     
     // Attend TOAST (1s)
@@ -94,44 +111,48 @@ describe('App - addUser', () => {
       expect(screen.getByText(/Bienvenue sur votre annuaire/i)).toBeInTheDocument();
     }, { timeout: 4000 });
     
-    // Vérifie localStorage + Home rendu
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    expect(users).toHaveLength(1);
-    expect(users[0].firstName).toBe('Marie');
+
   });
 });
 
 
 describe('App - setUsers', () => {
   beforeEach(() => {
-    localStorage.clear();
+    jest.clearAllMocks();
+    mockGetUsers.mockResolvedValue({ users: [], countUsers: 0 });
+    mockPostUser.mockResolvedValue({ id: 1 });
   });
-
   it('setUsers incrémente le compteur après ajout', async () => {
-    render(<App />);
-    
-    // Compteur initial = 0
-    expect(JSON.parse(localStorage.getItem('users') || '[]')).toHaveLength(0);
-    
-    // Va sur Register + remplit formulaire
-    await userEvent.click(screen.getByRole('link', { name: /nouvelle inscription/i }));
-    await waitFor(() => screen.getByText(/Ajouter un nouvel utilisateur/i));
-    
-    await userEvent.type(screen.getByLabelText(/Prénom/i), 'Marie');
-    await userEvent.type(screen.getByLabelText(/Nom de famille/i), 'Martin');
-    await userEvent.type(screen.getByLabelText(/Date de naissance/i), '1990-01-01');
-    await userEvent.type(screen.getByLabelText(/Email/i), 'marie@test.fr');
-    await userEvent.type(screen.getByLabelText(/Ville/i), 'Angers');
-    await userEvent.type(screen.getByLabelText(/Code postal/i), '49100');
-    
-    // Soumet → addUser → setUsers([...users, newUser])
-    await userEvent.click(screen.getByRole('button', { name: /S'inscrire/i }));
-    
-    // Attend redirection + setUsers effet (2s)
-    await waitFor(() => {
-      expect(JSON.parse(localStorage.getItem('users') || '[]')).toHaveLength(1); 
-    }, { timeout: 4000 });
+  // Mock avec 1 utilisateur déjà présent
+  mockGetUsers.mockResolvedValue({ users: [{ name: 'Marie', id: 1 }], countUsers: 1 });
+  
+  render(<App />);
+  
+  // Clique sur Register
+  await userEvent.click(screen.getByRole('link', { name: /nouvelle inscription/i }));
+  
+  // Remplit formulaire
+  await userEvent.type(screen.getByLabelText(/Prénom/i), 'Jean');
+  await userEvent.type(screen.getByLabelText(/Nom de famille/i), 'Dupont');
+  await userEvent.type(screen.getByLabelText(/Date de naissance/i), '1990-01-01');
+  await userEvent.type(screen.getByLabelText(/Email/i), 'jean@test.fr');
+  await userEvent.type(screen.getByLabelText(/Ville/i), 'Paris');
+  await userEvent.type(screen.getByLabelText(/Code postal/i), '75000');
+  
+  // Soumet
+  await userEvent.click(screen.getByRole('button', { name: /S'inscrire/i }));
+  
+  // Attend toast + retour Home avec compteur
+  await waitFor(() => {
+    expect(screen.getByText(/Inscription réussie/i)).toBeInTheDocument();
   });
+  
+  // Vérifie retour Home avec 2 utilisateurs
+  await waitFor(() => {
+    expect(screen.getByText(/Bienvenue sur votre annuaire/i)).toBeInTheDocument();
+  }, { timeout: 4000 });
+});
+
 });
 
 

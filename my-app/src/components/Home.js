@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import { GetUsers } from '../api';
 
 const Home = ({ users, userCount }) => {
   const [localUsers, setLocalUsers] = useState([]);
@@ -23,10 +24,11 @@ const tableCellStyle = {
 };
 
   useEffect(() => {
-    const loadUsers = () => {
-      const saved = JSON.parse(localStorage.getItem('users') || '[]');
-      setLocalUsers(saved);
-      setLocalCount(saved.length);
+    const loadUsers = async () => {
+      const saved = await GetUsers();
+      setLocalUsers(saved.users);
+      setLocalCount(saved.countUsers);
+      console.log(saved, saved.length)
     };
 
     loadUsers();
@@ -34,7 +36,6 @@ const tableCellStyle = {
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('storage', loadUsers);
     };
   }, []);
 
@@ -61,7 +62,7 @@ const tableCellStyle = {
             >
             <thead>
                 <tr style={{ background: '#61dafb', color: '#282c34' }}>
-                <th style={tableHeaderStyle}>Prénom</th>
+                <th style={tableHeaderStyle}>Pseudo</th>
                 <th style={tableHeaderStyle}>Nom</th>
                 <th style={tableHeaderStyle}>Email</th>
                 <th style={tableHeaderStyle}>Âge</th>
@@ -83,14 +84,14 @@ const tableCellStyle = {
                         '&:hover': { background: 'rgba(255,255,255,0.05)' }
                     }}
                     >
-                    <td style={tableCellStyle}>{user.firstName}</td>
-                    <td style={tableCellStyle}>{user.lastName}</td>
+                    <td style={tableCellStyle}>{user.username}</td>
+                    <td style={tableCellStyle}>{user.name}</td>
                     <td style={tableCellStyle}>
                         <span style={{ fontSize: '0.9em' }}>{user.email}</span>
                     </td>
                     <td style={tableCellStyle}>{age}</td>
                     <td style={tableCellStyle}>
-                        <strong>{user.city}</strong>
+                        <strong>{user.address.city}</strong>
                     </td>
                     <td style={tableCellStyle}>{user.postalCode}</td>
                     
