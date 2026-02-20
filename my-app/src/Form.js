@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
 import validateForm from './module/validator.js';
 import './Form.css';
-import { PostUser } from './api.js';
 
 function Form({ onSubmitSuccess }) {
   const [formData, setFormData] = useState({
