@@ -16,7 +16,7 @@ function Register() {
     setError(null);
     
     try {
-      const result = await PostUser(userData);
+      await PostUser(userData);
       
       toast.success('Inscription réussie !');
       
