@@ -24,35 +24,6 @@ describe('Tests E2E Navigation',  () => {
                 }
             ],
 
-<<<<<<< HEAD
- 
-  it('Scénario Erreur', () => {
-
-    // L'utilisateur de l'autre test existe toujours
-    cy.window().its('localStorage').invoke('getItem', 'users')
-    .then((usersStr) => {
-        const users = JSON.parse(usersStr || '[]');
-        expect(users).to.have.length(1);
-    });
-
-    // Navigation vers Formulaire
-    cy.visit('http://localhost:3000/#/register');
-    cy.contains('Ajouter un nouvel utilisateur').should('be.visible');
-    
-    // Tentative invalide : email déjà pris + champs vides
-    cy.get('#firstName').type('Jean');
-    cy.get('#email').type('marie@test.fr'); // Email DUPLIQUÉ !
-    
-    cy.get('button').contains('S\'inscrire').should('be.disabled');
-      
-    // TOUJOURS 1 utilisateur (pas incrémenté)
-    cy.window().its('localStorage').invoke('getItem', 'users')
-        .then((usersStr) => {
-            const users = JSON.parse(usersStr || '[]');
-            expect(users).to.have.length(1);
-            expect(users[0].firstName).to.equal('Marie');
-=======
->>>>>>> 41db64e (Activite mocks)
         });
 
         cy.visit('http://localhost:3000/');
