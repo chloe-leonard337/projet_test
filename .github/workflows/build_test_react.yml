@@ -45,7 +45,7 @@ jobs:
         id: version-check
         run: |
           
-          npm ci
+          npm i
           
           # Récupère version locale
           LOCAL_VERSION=$(node -p "require('./package.json').version")
