@@ -51,6 +51,7 @@
     "@babel/plugin-transform-react-jsx": "^7.28.6",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-react": "^7.28.5",
+    "babel-cli": "^6.26.0",
     "cypress": "^15.10.0",
     "jsdoc": "^4.0.5",
     "react-test-renderer": "^19.2.4"
