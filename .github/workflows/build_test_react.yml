@@ -72,7 +72,7 @@ jobs:
       - name: Build and publish to NPM
         if: steps.version-check.outputs.publish == 'true'
         run: |
-          cd my-app
+          ls
           npm i
           git config --global user.email "chloeleo44@hotmail.com"
           git config --global user.name "chloe-leonard337"
