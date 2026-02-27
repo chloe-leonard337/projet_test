@@ -44,7 +44,7 @@ jobs:
       - name: Check if version needs publishing
         id: version-check
         run: |
-          
+          cd my-app
           npm i
           
           # Récupère version locale
@@ -73,6 +73,7 @@ jobs:
         if: steps.version-check.outputs.publish == 'true'
         run: |
           ls
+          
           npm i
           git config --global user.email "chloeleo44@hotmail.com"
           git config --global user.name "chloe-leonard337"
