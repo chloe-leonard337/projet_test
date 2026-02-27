@@ -21,7 +21,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd my-app
+          npm ci
 
       - name: Run tests
         run: npm test -- --coverage
