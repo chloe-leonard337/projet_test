@@ -2,6 +2,9 @@
 
 **Application React avec routing, localStorage et tests complets (Jest + Cypress)**
 
+## Publication du package npm 
+https://www.npmjs.com/package/chloe-leonard-ci-ynov
+
 ## Technologies
   - React 
   - Jest
