@@ -62,7 +62,7 @@ jobs:
           NPM_VERSION=$(npm view chloe-leonard-ci-ynov version 2>/dev/null || echo "0.0.0")
           echo "NPM: $NPM_VERSION"
           
-          if [[ "$LOCAL_VERSION" != "$NPM_VERSION" ]]; then
+          if [[ "$LOCAL_VERSION" > "$NPM_VERSION" ]]; then
             echo "Publishing new version $LOCAL_VERSION"
             git config --global user.email "chloeleo44@hotmail.com"
             git config --global user.name "chloe-leonard337"
