@@ -29,6 +29,7 @@ jobs:
       - name: Build application
         run: |
           cd my-app
+          npm i
           npm run build
 
   publish-npm:
