@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "chloe-leonard-ci-ynov",
   "version": "0.1.0",
   "private": false,
   "homepage": "https://chloe-leonard337.github.io/projet_test/#/",
@@ -23,7 +23,8 @@
     "test": "react-scripts test  --coverage --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --collectCoverageFrom=!src/logo.svg --watchAll=false",
     "eject": "react-scripts eject",
     "jsdoc": "jsdoc -R ./README.md -c ./jsdoc.config.json -r -d ./public/docs",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "build-npm": "SET NODE_ENV=production && rmdir /s /q dist 2>nul && mkdir dist && npx babel src --out-dir dist --copy-files"
   },
   "eslintConfig": {
     "extends": [
@@ -44,7 +45,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-react-jsx": "^7.28.6",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-react": "^7.28.5",
     "cypress": "^15.10.0",
