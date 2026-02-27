@@ -44,8 +44,20 @@ jobs:
       - name: Check if version needs publishing
         id: version-check
         run: |
-          ls
+          echo "Root contents:"
+          ls -la
+          
+          # Vérification explicite avant cd
+          if [ ! -d "my-app" ]; then
+            echo "my-app directory not found!"
+            ls -la
+            exit 1
+          fi
+          
           cd my-app
+          
+          echo "In my-app, package.json exists: $([ -f package.json ] && echo 'OK' || echo 'KO')"
+          
           npm ci
           # Récupère version locale
           LOCAL_VERSION=$(node -p "require('./package.json').version")
