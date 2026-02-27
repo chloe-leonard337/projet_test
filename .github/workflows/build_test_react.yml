@@ -44,7 +44,7 @@ jobs:
       - name: Check if version needs publishing
         id: version-check
         run: |
-          cd my-app
+          
           npm ci
           
           # Récupère version locale
