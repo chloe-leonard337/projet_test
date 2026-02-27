@@ -26,7 +26,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-        
+
+      - name: Authenticate with npm 
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
       - name: build and publish package on NPM
         run: |
           cd my-app
