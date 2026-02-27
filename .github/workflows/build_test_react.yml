@@ -29,6 +29,7 @@ jobs:
         
       - name: build and publish package on NPM
         run: |
+          cd my-app
           git config --global user.email "chloeleo44@hotmail.com"
           git config --global user.name "chloe-leonard337"
           npm run build-npm
