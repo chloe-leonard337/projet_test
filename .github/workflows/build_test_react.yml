@@ -53,7 +53,7 @@ jobs:
       - name: Check version and publish
         run: |
           cd my-app
-          npm ci
+          npm i
           
           # Version locale vs NPM
           LOCAL_VERSION=$(node -p "require('./package.json').version")
