@@ -34,82 +34,43 @@ jobs:
 
   publish-npm:
     needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - uses: actions/checkout@v4
+      
+      - name: Use Node.js 21.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+          cache: 'npm'
 
-      - name: Authenticate with npm 
+      - name: Authenticate with npm
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-      - name: Check if version needs publishing
-        id: version-check
+      - name: Check version and publish
         run: |
-          echo "Root contents:"
-          ls -la
-          
-          # Vérification explicite avant cd
-          if [ ! -d "my-app" ]; then
-            echo "my-app directory not found!"
-            ls -la
-            exit 1
-          fi
-          
           cd my-app
-          
-          echo "In my-app, package.json exists: $([ -f package.json ] && echo 'OK' || echo 'KO')"
-          
           npm ci
-          # Récupère version locale
+          
+          # Version locale vs NPM
           LOCAL_VERSION=$(node -p "require('./package.json').version")
-          echo "Local version: $LOCAL_VERSION"
+          echo "Local: $LOCAL_VERSION"
           
-          # Récupère version npm 
-          npm view chloe-leonard-ci-ynov version --silent > latest_version.txt
-          NPM_VERSION=$(cat latest_version.txt 2>/dev/null)
-          echo "Published version: $NPM_VERSION"
+          NPM_VERSION=$(npm view chloe-leonard-ci-ynov version 2>/dev/null || echo "0.0.0")
+          echo "NPM: $NPM_VERSION"
           
-          if npm version $LOCAL_VERSION > /dev/null 2>&1 && npm version $NPM_VERSION > /dev/null 2>&1; then
-            if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
-              echo "publish=true" >> $GITHUB_OUTPUT
-              echo "Local version $LOCAL_VERSION > $NPM_VERSION - Will publish"
-            else
-              echo "publish=false" >> $GITHUB_OUTPUT
-              echo "Versions identical - Skipping publish"
-            fi
+          if [[ "$LOCAL_VERSION" != "$NPM_VERSION" ]]; then
+            echo "Publishing new version $LOCAL_VERSION"
+            npm run build-npm-ci
+            npm publish --access public
           else
-            echo "publish=true" >> $GITHUB_OUTPUT
-            echo "New package or invalid version - Will publish"
+            echo "Version already published, skipping"
+            exit 0
           fi
-
-      - name: Build and publish to NPM
-        if: steps.version-check.outputs.publish == 'true'
-        run: |
-          ls
-          
-          npm i
-          git config --global user.email "chloeleo44@hotmail.com"
-          git config --global user.name "chloe-leonard337"
-          npm run build-npm-ci
-          npm version patch
-          npm publish
-          git add .
-          git commit -m "updated version"
-          git push
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Skip message
-        if: steps.version-check.outputs.publish != 'true'
-        run: echo "NPM publish skipped - version already exists"
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v3
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: my-app/build
 
   deploy:
     needs: [build-and-test, publish-npm]  
