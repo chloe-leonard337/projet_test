@@ -64,8 +64,14 @@ jobs:
           
           if [[ "$LOCAL_VERSION" != "$NPM_VERSION" ]]; then
             echo "Publishing new version $LOCAL_VERSION"
+            git config --global user.email "chloeleo44@hotmail.com"
+            git config --global user.name "chloe-leonard337"
             npm run build-npm-ci
-            npm publish --access public
+            npm version patch
+            npm publish
+            git add .
+            git commit -m "updated version"
+            git push
           else
             echo "Version already published, skipping"
             exit 0
