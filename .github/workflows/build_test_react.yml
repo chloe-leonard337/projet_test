@@ -1,25 +1,18 @@
 name: Build and Test React Application 
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build_test:
+  build-and-test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [21.x]
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
       - name: Use Node.js ${{ matrix.node-version }}
@@ -27,10 +20,54 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --coverage
+
+      - name: Build application
+        run: npm run build
+
+  publish-npm:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+
       - name: Authenticate with npm 
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-      - name: build and publish package on NPM
+      - name: Check if version needs publishing
+        id: version-check
+        run: |
+          cd my-app
+          npm ci
+          
+          # Récupère version locale
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+          echo "Local version: $LOCAL_VERSION"
+          
+          # Récupère version npm 
+          npm view chloe-leonard-ci-ynov version --silent > latest_version.txt
+          NPM_VERSION=$(cat latest_version.txt 2>/dev/null)
+          echo "Published version: $NPM_VERSION"
+          
+          if npm version $LOCAL_VERSION > /dev/null 2>&1 && npm version $NPM_VERSION > /dev/null 2>&1; then
+            if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
+              echo "publish=true" >> $GITHUB_OUTPUT
+              echo "Local version $LOCAL_VERSION > $NPM_VERSION - Will publish"
+            else
+              echo "publish=false" >> $GITHUB_OUTPUT
+              echo "Versions identical - Skipping publish"
+            fi
+          else
+            echo "publish=true" >> $GITHUB_OUTPUT
+            echo "New package or invalid version - Will publish"
+          fi
+
+      - name: Build and publish to NPM
+        if: steps.version-check.outputs.publish == 'true'
         run: |
           cd my-app
           npm i
@@ -44,7 +81,11 @@ jobs:
           git push
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        
+
+      - name: Skip message
+        if: steps.version-check.outputs.publish != 'true'
+        run: echo "NPM publish skipped - version already exists"
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
@@ -53,18 +94,17 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: my-app/build
-          
+
   deploy:
-    needs: build_test
+    needs: [build-and-test, publish-npm]  
     permissions: 
       pages: write
       id-token: write
     runs-on: ubuntu-latest
     environment: 
       name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to Github Pages
         id: deployment
         uses: actions/deploy-pages@v4
-    
