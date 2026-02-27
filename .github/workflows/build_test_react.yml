@@ -32,7 +32,7 @@ jobs:
           cd my-app
           git config --global user.email "chloeleo44@hotmail.com"
           git config --global user.name "chloe-leonard337"
-          npm run build-npm
+          npm run build-npm-ci
           npm version patch
           npm publish
           git add .
