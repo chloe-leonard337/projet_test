@@ -22,11 +22,14 @@ jobs:
 
       - name: Run tests
         run: |
+          cd my-app
           npm i
           npm test -- --coverage
 
       - name: Build application
-        run: npm run build
+        run: |
+          cd my-app
+          npm run build
 
   publish-npm:
     needs: build-and-test
