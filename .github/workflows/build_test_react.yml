@@ -76,6 +76,15 @@ jobs:
             echo "Version already published, skipping"
             exit 0
           fi
+          
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: my-app/build
 
   deploy:
     needs: [build-and-test, publish-npm]  
