@@ -77,6 +77,18 @@ jobs:
             exit 0
           fi
           
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: my-app
+          build: npm run build
+          start: npm run start
+
+      - name: Upload coverage reports to codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+          
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
