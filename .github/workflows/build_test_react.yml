@@ -37,8 +37,8 @@ jobs:
           git add .
           git commit -m “updated version”
           git push
-          env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         
       - name: Setup Pages
         id: pages
