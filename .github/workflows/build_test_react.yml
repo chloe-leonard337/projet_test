@@ -114,10 +114,9 @@ jobs:
 
           echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > mysql.env
           echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> mysql.env
-          echo "MYSQL_HOST=$MYSQL_HOST" >> mysql.env
           
           docker build -t migration_mysql .
-          docker run -d --env-file mysql.env --name migration_container migration_mysql
+          docker run -d --env-file mysql.env -p 3306:3306 --name migration_container migration_mysql
 
           sleep 5
           echo "=== API LOGS ==="
@@ -146,7 +145,7 @@ jobs:
           echo "MYSQL_HOST=$MYSQL_HOST" >> api.env
           
           docker build -t ynov-ci-cd-api .
-          docker run -d --name ynov-api --network container:migration_container --env-file api.env ynov-ci-cd-api
+          docker run -d --name ynov-api --env-file api.env -p 8000:8000 ynov-ci-cd-api
           
           sleep 5
           echo "=== API LOGS ==="
