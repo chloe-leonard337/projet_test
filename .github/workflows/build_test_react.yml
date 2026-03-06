@@ -165,7 +165,7 @@ jobs:
 
           
       - name: Check users exist
-        run: curl -s http://localhost:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
+        run: curl -s 172.17.0.1:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
 
 
 
