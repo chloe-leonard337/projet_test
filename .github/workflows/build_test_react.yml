@@ -119,6 +119,14 @@ jobs:
           docker build -t migration_mysql .
           docker run -d --env-file mysql.env -p 3306:3306 --name migration_container migration_mysql
 
+          sleep 5
+          echo "=== API LOGS ==="
+          docker logs migration_container || echo "No logs"
+          
+          # Vérifie état
+          echo "=== Docker PS ==="
+          docker ps -a --filter name=migration_container
+
       - name: Wait for MySQL
         run: sleep 15 
         shell: bash 
@@ -139,12 +147,20 @@ jobs:
           
           docker build -t ynov-ci-cd-api .
           docker run -d --name ynov-api --env-file api.env -p 8000:8000 ynov-ci-cd-api
+          
           sleep 5
+          echo "=== API LOGS ==="
+          docker logs ynov-api || echo "No logs"
+          
+          # Vérifie état
+          echo "=== Docker PS ==="
+          docker ps -a --filter name=ynov-api 
+          
 
       - name: Check API /users status 200
         run: |
           sleep 15
-          docker ps | grep api_test || (echo "API not running!" && exit 1)
+          docker ps | grep ynov-api  || (echo "API not running!" && exit 1)
           
           for i in {1..10}; do
             if curl -s -o /tmp/response.json -w "%{http_code}" http://localhost:8000/users > /tmp/http_code; then
