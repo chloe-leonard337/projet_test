@@ -174,7 +174,7 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
+          docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}" .
           docker push "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
           
 
