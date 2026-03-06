@@ -19,11 +19,11 @@ app.add_middleware(
 
 # Valeurs par défaut pour debug
 conn = mysql.connector.connect(
-    database=os.getenv("MYSQL_DATABASE", "ynovDatabase"),
-    user=os.getenv("MYSQL_USER", "root"),
-    password=os.getenv("MYSQL_ROOT_PASSWORD", "ynov-CICD"),
+    database=os.getenv("MYSQL_DATABASE"),
+    user=os.getenv("MYSQL_USER"),
+    password=os.getenv("MYSQL_ROOT_PASSWORD"),
     port=3306,
-    host=os.getenv("MYSQL_HOST", "localhost")  # ✅ DÉFAUT
+    host=os.getenv("MYSQL_HOST") 
 )
 
 @app.get("/users")
@@ -37,6 +37,3 @@ async def get_users():
     # Renvoie nos données et code 200 OK
     return {'utilisateurs': records}
 
-if __name__ == "__main__":
-
-    uvicorn.run(app, host="0.0.0.0", port=8000)
