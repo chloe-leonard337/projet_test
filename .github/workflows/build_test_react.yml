@@ -149,6 +149,7 @@ jobs:
           
           sleep 5
           echo "=== API LOGS ==="
+          echo api.env
           docker logs ynov-api || echo "No logs"
           
           # Vérifie état
