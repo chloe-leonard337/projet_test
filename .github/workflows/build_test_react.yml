@@ -160,26 +160,11 @@ jobs:
           
 
       - name: Check API /users status 200
-        run: |
-          sleep 15
-          docker ps | grep ynov-api  || (echo "API not running!" && exit 1)
-          
-          for i in {1..10}; do
-            if curl -s -o /tmp/response.json -w "%{http_code}" http://localhost:8000/users > /tmp/http_code; then
-              HTTP_CODE=$(cat /tmp/http_code)
-              break
-            fi
-            echo "Tentative $i/10..."
-            sleep 3
-          done
-          
-          echo "HTTP_CODE=$HTTP_CODE"
-          cat /tmp/response.json
-          
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "ERREUR HTTP $HTTP_CODE"
-            exit 1
-          fi
+        uses: lakuapik/gh-actions-http-status@v1
+        with:
+          sites: '["http://localhost:8000/users"]'
+          expected: '[200]'
+
           
       - name: Check users exist
         run: curl -s http://localhost:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
