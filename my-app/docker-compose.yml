@@ -1,0 +1,27 @@
+
+services:
+  mysql:
+    image: migration_mysql
+    container_name: migration_container
+    env_file: ./mysql/.env
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s 
+
+  
+  api:
+    build: ./api.
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file: ./api/.env
+    environment:
+      MYSQL_HOST: mysql  
+    restart: unless-stopped

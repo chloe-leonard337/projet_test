@@ -1,0 +1,4 @@
+DROP DATABASE IF EXISTS ynovDatabase;
+
+CREATE DATABASE ynovDatabase;
+
