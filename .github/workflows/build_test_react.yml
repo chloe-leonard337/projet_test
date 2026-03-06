@@ -147,11 +147,9 @@ jobs:
           docker build -t ynov-ci-cd-api .
           docker run -d --name ynov-api --env-file api.env -p 8000:8000 ynov-ci-cd-api
           
-          sleep 5
+          sleep 10
           echo "=== API LOGS ==="
-          echo "=== Contenu api.env ==="
-          cat api.env
-          echo "======================"
+          
           docker logs ynov-api || echo "No logs"
           
           # Vérifie état
