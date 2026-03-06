@@ -167,7 +167,16 @@ jobs:
       - name: Check users exist
         run: curl -s 172.17.0.1:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
 
-
+      - name: Publish to Docker Hub
+        if: success() 
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
+          docker push "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
+          
 
 
   deploy:
