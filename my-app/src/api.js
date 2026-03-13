@@ -1,13 +1,16 @@
 import axios from 'axios';
 
-const API = `https://jsonplaceholder.typicode.com`;
+const API = `http://localhost:8000`;
 
 export const GetUsers = async () => {
 
     try {
         const response = await axios.get(`${API}/users`);
-        const users = response.data;
+        console.log("reponse : ", response);
+        const users = response.data.utilisateurs;
         const countUsers = users.length;
+        console.log(users);
+        console.log(countUsers);
         return { users, countUsers };
     } catch (error){
         console.error(error)

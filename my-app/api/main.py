@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from dotenv import load_dotenv
+from fastapi import Request
 
 load_dotenv()
 app = FastAPI()
@@ -36,4 +37,27 @@ async def get_users():
     print("Total number of rows in table : ", cursor.rowcount)
     # Renvoie nos données et code 200 OK
     return {'utilisateurs': records}
+
+
+@app.post("/users")
+async def create_user(request: Request):
+    body = await request.json()  
+    cursor = conn.cursor()
+    nom = body["firstName"]
+    prenom = body["lastName"] 
+    email = body["email"]
+    age = 40
+    ville = body["city"]
+    codePostal = body["postalCode"]
+
+    sql_insert_query = """
+        INSERT INTO utilisateur (nom, prenom, email, age, ville, codePostal) 
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    
+    values = (nom, prenom, email, age, ville, codePostal)
+    cursor.execute(sql_insert_query, values)
+    conn.commit()
+    
+    return {"message": "Utilisateur créé avec succès"}
 

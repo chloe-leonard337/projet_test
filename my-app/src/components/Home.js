@@ -28,15 +28,10 @@ const tableCellStyle = {
       const saved = await GetUsers();
       setLocalUsers(saved.users);
       setLocalCount(saved.countUsers);
-      console.log(saved, saved.length)
     };
 
     loadUsers();
-    const interval = setInterval(loadUsers, 2000);
 
-    return () => {
-      clearInterval(interval);
-    };
   }, []);
 
 
@@ -62,42 +57,33 @@ const tableCellStyle = {
             >
             <thead>
                 <tr style={{ background: '#61dafb', color: '#282c34' }}>
-                <th style={tableHeaderStyle}>Pseudo</th>
                 <th style={tableHeaderStyle}>Nom</th>
+                <th style={tableHeaderStyle}>Prénom</th>
                 <th style={tableHeaderStyle}>Email</th>
-                <th style={tableHeaderStyle}>Âge</th>
+                <th style={tableHeaderStyle}>Age</th>
+                <th style={tableHeaderStyle}>Telephone</th>
                 <th style={tableHeaderStyle}>Ville</th>
                 <th style={tableHeaderStyle}>CP</th>
                 </tr>
             </thead>
             <tbody>
-                {localUsers.map((user, index) => {
-                const age = user.dob ? 
-                    new Date().getFullYear() - new Date(user.dob).getFullYear() : 
-                    'N/A';
-                
-                return (
-                    <tr 
-                    key={user.timestamp || index} 
-                    style={{ 
-                        borderBottom: '1px solid rgba(255,255,255,0.2)',
-                        '&:hover': { background: 'rgba(255,255,255,0.05)' }
-                    }}
-                    >
-                    <td style={tableCellStyle}>{user.username}</td>
-                    <td style={tableCellStyle}>{user.name}</td>
-                    <td style={tableCellStyle}>
-                        <span style={{ fontSize: '0.9em' }}>{user.email}</span>
-                    </td>
-                    <td style={tableCellStyle}>{age}</td>
-                    <td style={tableCellStyle}>
-                        <strong>{user.address.city}</strong>
-                    </td>
-                    <td style={tableCellStyle}>{user.postalCode}</td>
-                    
-                    </tr>
-                );
-                })}
+              {localUsers.map((user, index) => {
+                  return (
+                      <tr key={user[0] || index}>  {/* id = index 0 */}
+                          <td style={tableCellStyle}>{user[1]}</td>      {/* nom */}
+                          <td style={tableCellStyle}>{user[2]}</td>      {/* prenom */}
+                          <td style={tableCellStyle}>
+                              <span style={{ fontSize: '0.9em' }}>{user[3]}</span>  {/* email */}
+                          </td>
+                          <td style={tableCellStyle}>{user[4] || "N/A"}</td>       {/* age */}
+                          <td style={tableCellStyle}>{user[5] || "N/A"}</td>       {/* telephone */}
+                          <td style={tableCellStyle}>
+                              <strong>{user[6] || "N/A"}</strong>              {/* ville */}
+                          </td>
+                          <td style={tableCellStyle}>{user[7] || "N/A"}</td>       {/* codePostal */}
+                      </tr>
+                  );
+              })}
             </tbody>
             </table>
         </div>

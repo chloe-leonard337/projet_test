@@ -20,7 +20,7 @@ describe('API functions - 100% Coverage réel', () => {
 
       const result = await GetUsers();
 
-      expect(axios.get).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/users');
+      expect(axios.get).toHaveBeenCalledWith('http://localhost:8000/users');
       expect(result.users).toEqual(mockUsers);
       expect(result.countUsers).toBe(2); 
     });
@@ -35,7 +35,7 @@ describe('API functions - 100% Coverage réel', () => {
 
       await expect(GetUsers()).rejects.toBe(axiosError);
       expect(consoleSpy).toHaveBeenCalledWith(axiosError); 
-      expect(axios.get).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/users');
+      expect(axios.get).toHaveBeenCalledWith('http://localhost:8000/users');
       consoleSpy.mockRestore();
     });
 
