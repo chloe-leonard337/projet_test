@@ -102,68 +102,35 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
-      
-      - name: Build & Run MySQL
-        env:
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+
+      - name: Lancement docker compose
         run: |
-          cd ./my-app/mysql
-
-          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > mysql.env
-          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> mysql.env
-          
-          docker build -t migration_mysql .
-          docker run -d --env-file mysql.env -p 3306:3306 --name migration_container migration_mysql
-
-          sleep 5
-          echo "=== API LOGS ==="
-          docker logs migration_container || echo "No logs"
-          
-          # Vérifie état
-          echo "=== Docker PS ==="
-          docker ps -a --filter name=migration_container
-
-      - name: Wait for MySQL
-        run: sleep 15 
-        shell: bash 
-
-      - name: Build & Run API
-        env:
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        run: |
-          cd ./my-app/api
-
-          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > api.env
-          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> api.env
-          echo "MYSQL_USER=$MYSQL_USER" >> api.env
-          echo "MYSQL_HOST=$MYSQL_HOST" >> api.env
-          
-          docker build -t ynov-ci-cd-api .
-          docker run -d --name ynov-api --env-file api.env -p 8000:8000 ynov-ci-cd-api
-          
-          sleep 10
-          echo "=== API LOGS ==="
-          
-          docker logs ynov-api || echo "No logs"
-          
-          # Vérifie état
-          echo "=== Docker PS ==="
-          docker ps -a --filter name=ynov-api 
-          
-
+          cd my-app
+          docker compose up -d
+          sleep 120
+     
+  tests_build_docker:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    steps:
       - name: Check API /users status 200
         uses: lakuapik/gh-actions-http-status@v1
         with:
           sites: '["172.17.0.1:8000/users"]'
           expected: '[200]'
 
-          
+      - name: Check adminer status 200
+        uses: lakuapik/gh-actions-http-status@v1
+        with:
+          sites: '["172.17.0.1:8080"]'
+          expected: '[200]'
+
+      - name: Check app status 200
+        uses: lakuapik/gh-actions-http-status@v1
+        with:
+          sites: '["172.17.0.1:3000"]'
+          expected: '[200]'
+                    
       - name: Check users exist
         run: curl -s 172.17.0.1:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
 
@@ -178,8 +145,6 @@ jobs:
           docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}" .
           docker push "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
           
-
-
   deploy:
     needs: [build-and-test, publish-npm]  
     permissions: 
