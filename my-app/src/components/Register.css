@@ -1,167 +1,227 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ── Variables ──────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  color: #333;
+:root {
+  --bg:         #f5f4f0;
+  --surface:    #ffffff;
+  --border:     #e2e0d8;
+  --text:       #1a1916;
+  --text-muted: #8a887e;
+  --accent:     #2d5a27;
+  --accent-light: #e8f0e7;
+  --error:      #c0392b;
+  --error-light: #fdf0ef;
+  --radius:     10px;
+  --shadow:     0 2px 16px rgba(0,0,0,0.07);
 }
 
-.home-container, .App {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 2rem;
-}
-
-/* HEADER IDENTIQUE */
-.header, .App-header {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2.5rem 2rem;
-  border-radius: 16px;
-  text-align:  center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.header h1, .App-header h1 {
-  color: #4a5568;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 300;
-  margin-bottom: 1rem;
-}
-
-.stats {
-  font-size: 1.3rem;
-  color: #666;
-}
-
-.stats .count {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.4rem;
-  margin-right: 0.5rem;
-}
-
-/* MAIN */
-.main-content {
-  flex: 1;
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
   padding: 0;
 }
 
-.table-container, .form-container {
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+/* ── Page layout ────────────────────────────────────────── */
+.App {
+  min-height: 100vh;
+  background-color: var(--bg);
+  font-family: 'Sora', sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 5rem;
 }
 
-.users-table {
+/* ── Header ─────────────────────────────────────────────── */
+.Home-header {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
+  max-width: 540px;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
 }
 
-.users-table th {
-  background: #f8f9fa;
-  padding: 1rem 1.5rem;
-  text-align: left;
+.Home-header h1 {
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #555;
-  border-bottom: 3px solid #667eea;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
-.users-table td {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e9ecef;
+.Home-header h1::before {
+  content: '›';
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  margin-right: 0.5rem;
 }
 
-.users-table tr:hover {
-  background: #f0f7ff;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #666;
-}
-
-/* FORMULAIRE */
-.form {
+/* ── Error alert ────────────────────────────────────────── */
+.error-alert {
+  width: 100%;
+  max-width: 540px;
+  background: var(--error-light) !important;
+  border: 1px solid var(--error) !important;
+  border-left: 4px solid var(--error) !important;
+  border-radius: var(--radius) !important;
+  color: var(--error) !important;
+  padding: 0.875rem 1rem !important;
+  margin-bottom: 1.5rem !important;
+  font-size: 0.875rem;
+  font-weight: 400;
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
+  animation: slideDown 0.2s ease;
 }
 
-.form-field label {
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Form card ──────────────────────────────────────────── */
+form,
+.form-card {
+  width: 100%;
+  max-width: 540px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Field group ────────────────────────────────────────── */
+.field-group,
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+label {
+  font-size: 0.78rem;
   font-weight: 600;
-  color: #4a5568;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.form-field input {
-  padding: 1rem 1.25rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s ease;
-}
-
-.form-field input:focus {
+/* ── Inputs ─────────────────────────────────────────────── */
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+input {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.925rem;
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-field input.error {
-  border-color: #f56565;
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+  background: var(--surface);
 }
 
-/* BOUTONS IDENTIQUES */
-.btn-primary, .submit-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ── 2-column row ───────────────────────────────────────── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ── Submit button ──────────────────────────────────────── */
+button[type="submit"],
+.btn-submit {
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background: var(--accent);
+  color: #fff;
   border: none;
-  padding: 1.25rem 2.5rem;
-  border-radius: 8px;
-  font-size: 1.1rem;
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.01em;
+}
+
+button[type="submit"]:hover,
+.btn-submit:hover {
+  background: #234a1e;
+}
+
+button[type="submit"]:active,
+.btn-submit:active {
+  transform: scale(0.98);
+}
+
+button[type="submit"]:disabled,
+.btn-submit:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Loading spinner on button ──────────────────────────── */
+button[type="submit"].loading::after,
+.btn-submit.loading::after {
+  content: '';
   display: inline-block;
-  text-align: center;
-  min-width: 220px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-left: 0.6rem;
+  vertical-align: middle;
 }
 
-.btn-primary:hover, .submit-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-/* FOOTER */
-.footer {
-  padding: 2rem 0;
-  text-align: center;
+/* ── Toast overrides ────────────────────────────────────── */
+.Toastify__toast {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.875rem !important;
+  border-radius: var(--radius) !important;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .home-container, .App {
-    padding: 1rem;
-    gap: 1.5rem;
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .App {
+    padding: 2rem 1rem 4rem;
+  }
+
+  form,
+  .form-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
   }
 }

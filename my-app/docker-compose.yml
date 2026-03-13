@@ -8,6 +8,7 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql/sqlfiles/:/docker-entrypoint-initdb.d/
+      - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -35,23 +36,15 @@ services:
     environment:
       MYSQL_HOST: db  
     restart: unless-stopped
+    volumes:
+      - ./api:/app 
 
   frontend:
-    image: node:20  
-    depends_on:
-      - api
-    volumes: 
-      - "./:/app" 
-    working_dir: /app
+    build: ./     
     ports: 
-      - "3000:3000" 
-    command: sh -c "npm install && npm start"
-    restart: "no"
-    healthcheck:
-      test: "curl -f http://localhost:3000/"
-      interval: 10s
-      timeout: 5s
-      retries: 20
-      start_period: 30s 
+      - "3000:3000"
+    volumes: 
+      - ./:/app  
 
-
+volumes:
+  mysql_data:

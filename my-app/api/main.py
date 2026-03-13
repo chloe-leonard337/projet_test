@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import Request
+from datetime import date
 
 load_dotenv()
 app = FastAPI()
@@ -43,16 +44,21 @@ async def get_users():
 async def create_user(request: Request):
     body = await request.json()  
     cursor = conn.cursor()
-    nom = body["firstName"]
-    prenom = body["lastName"] 
+
+    nom = body["lastName"]
+    prenom = body["firstName"] 
     email = body["email"]
-    age = 40
     ville = body["city"]
     codePostal = body["postalCode"]
 
+    dob = date.fromisoformat(body["dob"])
+    today = date.today()
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+ 
+
     sql_insert_query = """
-        INSERT INTO utilisateur (nom, prenom, email, age, ville, codePostal) 
-        VALUES (%s, %s, %s, %s, %s, %s)
+    INSERT INTO utilisateur (nom, prenom, email, age, ville, codePostal) 
+    VALUES (%s, %s, %s, %s, %s, %s)
     """
     
     values = (nom, prenom, email, age, ville, codePostal)

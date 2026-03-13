@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import validateForm from './module/validator.js';
-import './Form.css';
+import './components/Home.css';
 
 function Form({ onSubmitSuccess }) {
   const [formData, setFormData] = useState({

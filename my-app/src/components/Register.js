@@ -47,7 +47,7 @@ function Register() {
   };
 
   return (
-    <div className="App">
+    <div className="Home">
       <header className="Home-header">
         <h1>Ajouter un nouvel utilisateur</h1>
       </header>
