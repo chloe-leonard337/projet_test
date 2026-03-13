@@ -126,7 +126,7 @@ jobs:
       - name: Check API /users status 200
         uses: lakuapik/gh-actions-http-status@v1
         with:
-          sites: '["172.17.0.1:8000/users"]'
+          sites: '["localhost:8000/users"]'
           expected: '[200]'
 
       - name: Check adminer status 200
