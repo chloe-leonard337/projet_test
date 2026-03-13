@@ -128,23 +128,23 @@ jobs:
       - name: Check API /users status 200
         uses: lakuapik/gh-actions-http-status@v1
         with:
-          sites: '["172.17.0.1:8000/users"]'
+          sites: '["localhost:8000/users"]'
           expected: '[200]'
 
       - name: Check adminer status 200
         uses: lakuapik/gh-actions-http-status@v1
         with:
-          sites: '["172.17.0.1:8080"]'
+          sites: '["localhost:8080"]'
           expected: '[200]'
 
       - name: Check app status 200
         uses: lakuapik/gh-actions-http-status@v1
         with:
-          sites: '["172.17.0.1:3000"]'
+          sites: '["localhost:3000"]'
           expected: '[200]'
                     
       - name: Check users exist
-        run: curl -s 172.17.0.1:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
+        run: curl -s localhost:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
 
       - name: Publish to Docker Hub
         if: success() 
