@@ -106,14 +106,20 @@ jobs:
       - name: Lancement docker compose
         env:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
           cd my-app
-          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > .env
-          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> .env
-          echo "MYSQL_HOST=$MYSQL_HOST" >> .env
+          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > mysql.env
+          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> mysql.env
+          
 
+          
+          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > api.env
+          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> api.env
+          echo "MYSQL_USER=$MYSQL_USER" >> api.env
+          echo "MYSQL_HOST=$MYSQL_HOST" >> api.env
           docker compose up -d
 
           sleep 120

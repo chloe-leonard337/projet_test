@@ -3,7 +3,7 @@ services:
   db:
     image: mysql:9.6
     container_name: migration_container
-    env_file: .env
+    env_file: mysql.env
     ports:
       - "3306:3306"
     volumes:
@@ -31,7 +31,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    env_file: .env
+    env_file: api.env
     environment:
       MYSQL_HOST: db  
     restart: unless-stopped
