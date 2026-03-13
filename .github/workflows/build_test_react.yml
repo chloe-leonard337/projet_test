@@ -112,7 +112,11 @@ jobs:
         run: |
           cd my-app
           docker compose up -d
+          docker logs migration_container
+          docker ps -a 
+
           sleep 120
+
      
   tests_build_docker:
     runs-on: ubuntu-latest
