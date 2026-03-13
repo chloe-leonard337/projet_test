@@ -107,15 +107,13 @@ jobs:
         env:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
           cd my-app
           echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > .env
           echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> .env
-          echo "MYSQL_USER=$MYSQL_USER" >> .env
           echo "MYSQL_HOST=$MYSQL_HOST" >> .env
-          
+
           docker compose up -d
           docker logs migration_container
           docker ps -a 
