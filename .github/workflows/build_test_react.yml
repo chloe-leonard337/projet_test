@@ -115,18 +115,12 @@ jobs:
           echo "MYSQL_HOST=$MYSQL_HOST" >> .env
 
           docker compose up -d
-          docker logs migration_container
-          docker ps -a 
 
           sleep 120
 
-     
-  tests_build_docker:
-    runs-on: ubuntu-latest
-    needs: build-docker
-    steps:
       - name: check status container
         run: |
+          cd my-app
           docker ps -a
 
       - name: Check API /users status 200
