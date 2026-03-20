@@ -128,6 +128,7 @@ jobs:
         run: |
           cd my-app
           docker ps -a
+          docker compose logs -f frontend
 
       - name: Check API /users endpoint  
         run: |
@@ -155,7 +156,7 @@ jobs:
       - name: Check app status 200
         run: |
           for i in {1..30}; do
-            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3000 || echo "%{http_code}")
+            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3000 || echo %{http_code})
             echo "App tentative $i: status $STATUS"
             if [[ "$STATUS" == "200" ]] || [[ "$STATUS" == "304" ]]; then
               exit 0
@@ -179,6 +180,18 @@ jobs:
           docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}" .
           docker push "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
           
+                    
+      - name: Run cypress on Docker compose
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: my-app
+          start: echo "Docker Compose déjà up !"  # rien à faire
+          wait-on: |
+            http://localhost:8000/users -status 200
+            http://localhost:3000 -status 200
+          wait-on-timeout: 60
+          browser: chrome
+          spec: cypress/e2e/**/*.cy.js
   deploy:
     needs: [build-and-test, publish-npm]  
     permissions: 
