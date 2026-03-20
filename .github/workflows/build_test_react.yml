@@ -180,18 +180,16 @@ jobs:
           docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}" .
           docker push "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
           
-                    
-      - name: Run cypress on Docker compose
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: my-app
-          start: echo "Docker Compose déjà up !"  # rien à faire
-          wait-on: |
-            http://localhost:8000/users -status 200
-            http://localhost:3000 -status 200
-          wait-on-timeout: 60
-          browser: chrome
-          spec: cypress/e2e/**/*.cy.js
+      - name: Run Cypress E2E on docker compose
+        run: |
+          cd my-app
+          docker ps  
+          npx cypress run \
+            --browser chrome \
+            --config baseUrl=http://localhost:3000 \
+            --spec "cypress/e2e/**/*.cy.js"
+
+
   deploy:
     needs: [build-and-test, publish-npm]  
     permissions: 
