@@ -6,6 +6,7 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import Request
 from datetime import date
+from fastapi import HTTPException
 
 load_dotenv()
 app = FastAPI()
@@ -42,11 +43,10 @@ async def get_users():
 
 @app.post("/users")
 async def create_user(request: Request):
-    body = await request.json()  
-    cursor = conn.cursor()
+    body = await request.json()
 
     nom = body["lastName"]
-    prenom = body["firstName"] 
+    prenom = body["firstName"]
     email = body["email"]
     ville = body["city"]
     codePostal = body["postalCode"]
@@ -54,16 +54,29 @@ async def create_user(request: Request):
     dob = date.fromisoformat(body["dob"])
     today = date.today()
     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
- 
 
+    cursor = conn.cursor()
+
+    # Vérifie si l'email existe déjà
+    cursor.execute("SELECT email FROM utilisateur WHERE email = %s", (email,))
+    if cursor.fetchone() is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Email déjà utilisé"  # <= message que tu veux renvoyer
+        )
+
+    # Insére l'utilisateur
     sql_insert_query = """
-    INSERT INTO utilisateur (nom, prenom, email, age, ville, codePostal) 
+    INSERT INTO utilisateur (nom, prenom, email, age, ville, codePostal)
     VALUES (%s, %s, %s, %s, %s, %s)
     """
-    
     values = (nom, prenom, email, age, ville, codePostal)
     cursor.execute(sql_insert_query, values)
     conn.commit()
-    
-    return {"message": "Utilisateur créé avec succès"}
 
+    cursor.close()
+
+    # Renvoye un message de succès 
+    return {
+        "message": "Inscription réussie !"
+    }

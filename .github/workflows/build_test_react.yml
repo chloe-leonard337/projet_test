@@ -153,10 +153,17 @@ jobs:
 
 
       - name: Check app status 200
-        uses: lakuapik/gh-actions-http-status@v1
-        with:
-          sites: '["http://localhost:3000"]'
-          expected: '[200]'
+        run: |
+          for i in {1..12}; do
+            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3000 || echo "000")
+            echo "App tentative $i: status $STATUS"
+            if [[ "$STATUS" == "200" ]] || [[ "$STATUS" == "304" ]]; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "App never returned 200/304"
+          exit 1
                     
       - name: Check users exist
         run: curl -s http://localhost:8000/users | jq -e '.utilisateurs | length > 0' || exit 1

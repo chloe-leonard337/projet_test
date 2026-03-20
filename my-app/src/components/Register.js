@@ -16,10 +16,12 @@ function Register() {
     setError(null);
     
     try {
-      await PostUser(userData);
-      
-      toast.success('Inscription réussie !');
-      
+    const result = await PostUser(userData);
+
+    const successMessage = result.message || 'Inscription réussie !';
+
+    toast.success(successMessage);
+    
       setTimeout(() => {
         navigate('/');
       }, 2000);
