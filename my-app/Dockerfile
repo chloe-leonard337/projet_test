@@ -1,6 +1,6 @@
 FROM node:20-alpine
-WORKDIR ./
-COPY package*.json ./
+WORKDIR /app
+COPY package*.json .
 RUN npm ci --only=production
 COPY . .
 EXPOSE 3000

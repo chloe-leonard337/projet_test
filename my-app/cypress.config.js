@@ -1,12 +1,11 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  projectId: '82dozn',
   allowCypressEnv: false,
   e2e: {
     baseUrl: 'http://localhost:3000',
-  },
 
-  e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },

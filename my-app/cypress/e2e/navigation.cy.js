@@ -26,8 +26,8 @@ describe('Tests E2E Navigation', () => {
         cy.wait(2500); 
 
         // Verifie que l'utilisateur apparait 
-        cy.contains('Test').should('be.visible');
-        cy.contains('Test2').should('be.visible');        
+        cy.contains('Dupont').should('be.visible');
+        cy.contains('Durand').should('be.visible');        
         
     });
 
@@ -36,15 +36,15 @@ describe('Tests E2E Navigation', () => {
         cy.visit('http://localhost:3000/');
 
         // Les 2 users initiaux sont affichés
-        cy.contains('Test').should('be.visible');
-        cy.contains('Test2').should('be.visible');
+        cy.contains('Dupont').should('be.visible');
+        cy.contains('Durand').should('be.visible');  
 
         cy.contains('nouvelle inscription').click();
         cy.url().should('include', '/register');
         cy.contains('Ajouter un nouvel utilisateur').should('be.visible');
 
         // Tentative invalide : email déjà pris + champs pas tous remplis
-        cy.get('#firstName').type('Jean');
+        cy.get('#firstName').type('Pierre');
         cy.get('#email').type('test@test.fr'); // email existant dans la liste
 
         cy.get('button').contains("S'inscrire").should('be.disabled');
@@ -52,10 +52,10 @@ describe('Tests E2E Navigation', () => {
         // Retour à la home pour vérifier que la liste n’a pas changé
         cy.visit('http://localhost:3000/');
 
-        cy.contains('Test').should('be.visible');
-        cy.contains('Test2').should('be.visible');
-        // aucun nouveau nom comme "Jean" par exemple
-        cy.contains('Jean').should('not.exist');
+        cy.contains('Dupont').should('be.visible');
+        cy.contains('Durand').should('be.visible'); 
+        // aucun nouveau nom comme "Pierre" par exemple
+        cy.contains('Pierre').should('not.exist');
     });
 
     it('Crash Serveur - Erreur 500', () => {
