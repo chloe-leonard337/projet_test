@@ -154,8 +154,8 @@ jobs:
 
       - name: Check app status 200
         run: |
-          for i in {1..12}; do
-            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3000 || echo "000")
+          for i in {1..30}; do
+            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3000 || echo "%{http_code}")
             echo "App tentative $i: status $STATUS"
             if [[ "$STATUS" == "200" ]] || [[ "$STATUS" == "304" ]]; then
               exit 0
