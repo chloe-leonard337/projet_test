@@ -128,7 +128,7 @@ jobs:
         run: |
           cd my-app
           docker ps -a
-          docker compose logs -f frontend
+          docker logs my-app-frontend-1
 
       - name: Check API /users endpoint  
         run: |
