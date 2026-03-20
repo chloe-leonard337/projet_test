@@ -54,7 +54,10 @@ describe('Tests E2E Navigation', () => {
 
         // Toast succès 
         cy.contains('Email invalide ou déjà utilisé').should('be.visible');
-        cy.wait(3500); 
+        cy.wait(2500); 
+
+        // Retour à la home pour vérifier que la liste n’a pas changé
+        cy.visit('http://localhost:3000/');
 
         // Verifie que l'utilisateur apparait 
         cy.contains('Dupont').should('be.visible');

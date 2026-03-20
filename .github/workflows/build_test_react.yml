@@ -184,11 +184,7 @@ jobs:
         run: |
           cd my-app
           docker ps  
-          npx cypress run \
-            --browser chrome \
-            --config baseUrl=http://localhost:3000 \
-            --spec "cypress/e2e/**/*.cy.js"
-
+          npx cypress run --headed --config baseUrl=http://localhost:3000
 
   deploy:
     needs: [build-and-test, publish-npm]  
