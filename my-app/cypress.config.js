@@ -1,17 +1,16 @@
-const { defineConfig } = require("cypress");
+import { defineConfig } from 'cypress';
 
-module.exports = defineConfig({
+export default defineConfig({
   projectId: '82dozn',
-  allowCypressEnv: false,
   e2e: {
     baseUrl: 'http://localhost:3000',
-
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // tes plugins
     },
-    testIsolation: false, 
+    testIsolation: false,
+    video: false,  // économise CI
+    screenshotOnRunFailure: true
   },
-
   component: {
     devServer: {
       framework: "react",
