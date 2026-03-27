@@ -1,14 +1,16 @@
-import { defineConfig } from 'cypress';
+const { defineConfig } = require('cypress')
 
-export default defineConfig({
+module.exports = defineConfig({
   projectId: '82dozn',
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
-      // tes plugins
+      const { plugin: cypressGrepPlugin } = require('@cypress/grep/plugin')
+      cypressGrepPlugin(config)
+      return config
     },
     testIsolation: false,
-    video: false,  // économise CI
+    video: false,  
     screenshotOnRunFailure: true
   },
   component: {

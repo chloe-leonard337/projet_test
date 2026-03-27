@@ -1,6 +1,6 @@
 describe('Tests E2E Navigation', () => {
 
-    it('Scénario classique', () => {
+    it('Scénario classique', { tags: 'classic'}, () => {
 
        cy.visit('http://localhost:3000/');
         cy.contains('Bienvenue sur votre annuaire').should('be.visible');
@@ -31,7 +31,7 @@ describe('Tests E2E Navigation', () => {
         
     });
 
-    it('Scénario doublon utilisateur', () => {
+    it('Scénario doublon utilisateur', { tags: 'doublon'}, () => {
 
        cy.visit('http://localhost:3000/');
         cy.contains('Bienvenue sur votre annuaire').should('be.visible');
@@ -65,7 +65,7 @@ describe('Tests E2E Navigation', () => {
         
     });
 
-    it('Scénario Erreur 400', () => {
+    it('Scénario Erreur 400', { tags: '404Error'}, () => {
 
         cy.visit('http://localhost:3000/');
 
@@ -91,8 +91,8 @@ describe('Tests E2E Navigation', () => {
         // aucun nouveau nom comme "Pierre" par exemple
         cy.contains('Pierre').should('not.exist');
     });
-    /*
-    it('Crash Serveur - Erreur 500', () => {
+    
+    it('Crash Serveur - Erreur 500',  { tags: '500Error'}, () => {
 
  
         cy.visit('http://localhost:3000/');
@@ -114,5 +114,5 @@ describe('Tests E2E Navigation', () => {
         // Pas de toast succès
         cy.contains('Inscription réussie').should('not.exist');
     });
-    */
+    
 });
