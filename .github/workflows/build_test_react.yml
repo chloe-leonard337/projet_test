@@ -184,8 +184,8 @@ jobs:
         run: |
           cd my-app
           docker ps  
-          docker exec -it my-app-frontend sh
-          npx cypress run --headed --config baseUrl=http://localhost:3000
+          docker exec -it my-app-frontend-1 sh
+          npm run cypress
 
   deploy:
     needs: [build-and-test, publish-npm]  
