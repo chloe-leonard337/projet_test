@@ -186,7 +186,9 @@ jobs:
           cd my-app
           docker ps  
 
-          npx cypress run --expose grepTags='classic; doublon; 400Error'
+          npx cypress run --expose grepTags='classic'; 
+          npx cypress run --expose grepTags='doublon'; 
+          npx cypress run --expose grepTags='400Error';
           
           docker compose down api
           npx cypress run --expose grepTags='500Error'
