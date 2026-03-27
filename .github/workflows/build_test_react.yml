@@ -122,7 +122,6 @@ jobs:
           echo "MYSQL_USER=$MYSQL_USER" >> api.env
           echo "MYSQL_HOST=$MYSQL_HOST" >> api.env
           docker compose up -d --build
-          docker inspect --format "{{json .State.Health }}" my-app-api-1 | jq
           sleep 120
 
       - name: check status container
