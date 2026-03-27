@@ -121,7 +121,7 @@ jobs:
           echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> api.env
           echo "MYSQL_USER=$MYSQL_USER" >> api.env
           echo "MYSQL_HOST=$MYSQL_HOST" >> api.env
-          docker compose up -d
+          docker compose up -d --build
           docker inspect --format "{{json .State.Health }}" my-app-api-1 | jq
           sleep 120
 
