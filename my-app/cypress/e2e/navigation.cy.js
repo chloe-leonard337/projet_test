@@ -65,7 +65,7 @@ describe('Tests E2E Navigation', () => {
         
     });
 
-    it('Scénario Erreur 400', { tags: '404Error'}, () => {
+    it('Scénario Erreur 400', { tags: '400Error'}, () => {
 
         cy.visit('http://localhost:3000/');
 
