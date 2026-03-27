@@ -191,7 +191,7 @@ jobs:
 
 
   deploy:
-    needs: [build-and-test, publish-npm]  
+    needs: [build-and-test, build-docker]  
     permissions: 
       pages: write
       id-token: write
