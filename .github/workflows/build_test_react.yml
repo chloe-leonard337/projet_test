@@ -111,6 +111,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
           cd my-app
+          npm i
           echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > mysql.env
           echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> mysql.env
           
@@ -184,7 +185,7 @@ jobs:
         run: |
           cd my-app
           docker ps  
-          npm i
+
           npx cypress run --expose grep='classic; doublon; 400Error'
           
           docker compose down api
