@@ -29,18 +29,8 @@ function Register() {
     } catch (err) {
       console.error('Erreur inscription:', err);
       
-      let errorMessage = 'Une erreur est survenue';
-      
-      if (err.response?.status === 400) {
-        errorMessage = err.response.data?.message || 'Email invalide ou déjà utilisé';
-      } else if (err.response?.status === 500) {
-        errorMessage = 'Erreur serveur, veuillez réessayez plus tard.';
-      } else if (err.code === 'ERR_NETWORK') {
-        errorMessage = 'Problème de connexion. Vérifiez votre réseau.';
-      } else {
-        errorMessage = err.message || 'Erreur inattendue';
-      }
-      
+      const errorMessage = err.message || 'Erreur inattendue';
+            
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {

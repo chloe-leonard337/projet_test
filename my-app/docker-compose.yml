@@ -10,11 +10,14 @@ services:
       - ./mysql/sqlfiles/:/docker-entrypoint-initdb.d/
       # - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [
+        "CMD-SHELL",
+        "mysql -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD -D $$MYSQL_DATABASE -e 'SELECT 1;' || exit 1"
+      ]
       interval: 10s
       timeout: 5s
       retries: 20
-      start_period: 30s 
+      start_period: 30s
 
   adminer:
     image: adminer
@@ -38,6 +41,12 @@ services:
       MYSQL_HOST: db  
     volumes:
       - ./api:/app 
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   frontend:
     build: ./     
@@ -46,7 +55,8 @@ services:
     environment:
       - REACT_APP_SERVER_PORT=http://api:8000
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     volumes: 
       - ./:/app  
       - /app/node_modules

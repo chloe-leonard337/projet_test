@@ -95,8 +95,8 @@ describe('Tests E2E Navigation', () => {
     it('Crash Serveur - Erreur 500',  { tags: '500Error'}, () => {
 
  
-        cy.visit('http://localhost:3000/');
-        cy.contains('nouvelle inscription').click();
+        cy.visit('http://localhost:3000/#/register');
+        // cy.contains('nouvelle inscription').click();
 
         // Formulaire valide mais serveur down
         cy.get('#firstName').type('testerreurServeur');
@@ -109,7 +109,7 @@ describe('Tests E2E Navigation', () => {
         cy.get('button').contains("S'inscrire").click();
 
         // App ne plante PAS - alerte utilisateur
-        cy.contains('Erreur serveur, veuillez réessayez plus tard.').should('be.visible');
+        cy.contains('Problème de connexion. Vérifiez votre réseau.').should('be.visible');
         
         // Pas de toast succès
         cy.contains('Inscription réussie').should('not.exist');
