@@ -29,6 +29,10 @@ conn = mysql.connector.connect(
     host=os.getenv("MYSQL_HOST") 
 )
 
+@app.get("/")
+def ping():
+    return {"status": "ok"}
+
 @app.get("/users")
 async def get_users():
     cursor = conn.cursor()
