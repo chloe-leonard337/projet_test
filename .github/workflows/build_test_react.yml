@@ -184,10 +184,10 @@ jobs:
         run: |
           cd my-app
           docker ps  
-          docker exec my-app-frontend-1 sh -c "npx cypress run --expose grep='classic; doublon; 400Error'"
+          npx cypress run --expose grep='classic; doublon; 400Error'
           
           docker compose down api
-          docker exec my-app-frontend-1 sh -c "npx cypress run --expose grep='500Error'"
+          npx cypress run --expose grep='500Error'
 
 
   deploy:
