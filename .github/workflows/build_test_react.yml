@@ -184,7 +184,7 @@ jobs:
         run: |
           cd my-app
           docker ps  
-          npm install -g cypress
+          npm i
           npx cypress run --expose grep='classic; doublon; 400Error'
           
           docker compose down api
