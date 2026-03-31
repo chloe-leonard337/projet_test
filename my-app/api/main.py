@@ -1,0 +1,86 @@
+import mysql.connector
+import os
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from dotenv import load_dotenv
+from fastapi import Request
+from datetime import date
+from fastapi import HTTPException
+
+load_dotenv()
+app = FastAPI()
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Valeurs par défaut pour debug
+conn = mysql.connector.connect(
+    database=os.getenv("MYSQL_DATABASE"),
+    user=os.getenv("MYSQL_USER"),
+    password=os.getenv("MYSQL_ROOT_PASSWORD"),
+    port=3306,
+    host=os.getenv("MYSQL_HOST") 
+)
+
+@app.get("/")
+def ping():
+    return {"status": "ok"}
+
+@app.get("/users")
+async def get_users():
+    cursor = conn.cursor()
+    sql_select_query = "SELECT * FROM utilisateur"
+    cursor.execute(sql_select_query)
+    # get all records
+    records = cursor.fetchall()
+    print("Total number of rows in table : ", cursor.rowcount)
+    # Renvoie nos données et code 200 OK
+    return {'utilisateurs': records}
+
+
+@app.post("/users")
+async def create_user(request: Request):
+    body = await request.json()
+
+    nom = body["lastName"]
+    prenom = body["firstName"]
+    email = body["email"]
+    ville = body["city"]
+    codePostal = body["postalCode"]
+
+    dob = date.fromisoformat(body["dob"])
+    today = date.today()
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+    cursor = conn.cursor()
+
+    # Vérifie si l'email existe déjà
+    cursor.execute("SELECT email FROM utilisateur WHERE email = %s", (email,))
+    if cursor.fetchone() is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Email déjà utilisé"  # <= message que tu veux renvoyer
+        )
+
+    # Insére l'utilisateur
+    sql_insert_query = """
+    INSERT INTO utilisateur (nom, prenom, email, age, ville, codePostal)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    values = (nom, prenom, email, age, ville, codePostal)
+    cursor.execute(sql_insert_query, values)
+    conn.commit()
+
+    cursor.close()
+
+    # Renvoye un message de succès 
+    return {
+        "message": "Inscription réussie !"
+    }

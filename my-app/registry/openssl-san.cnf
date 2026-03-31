@@ -1,0 +1,12 @@
+[req]
+default_bits = 4096
+prompt = no
+default_md = sha256
+x509_extensions = v3_req
+distinguished_name = dn
+[dn]
+CN = 35.180.100.149
+[v3_req]
+subjectAltName = @alt_names
+[alt_names]
+IP.1 = 35.180.100.149

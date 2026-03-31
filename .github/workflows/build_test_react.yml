@@ -1,0 +1,206 @@
+name: Build and Test React Application 
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [21.x]
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      #- name: Run tests
+      #  run: |
+      #    cd my-app
+      #    npm i
+      #    npm test -- --coverage
+
+      - name: Build application
+        run: |
+          cd my-app
+          npm i
+          npm run build
+
+  publish-npm:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Authenticate with npm
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Check version and publish
+        run: |
+          cd my-app
+          npm i
+          
+          # Version locale vs NPM
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+          echo "Local: $LOCAL_VERSION"
+          
+          NPM_VERSION=$(npm view chloe-leonard-ci-ynov version 2>/dev/null)
+          echo "NPM: $NPM_VERSION"
+          
+          if [[ "$LOCAL_VERSION" > "$NPM_VERSION" ]]; then
+            echo "Publishing new version $LOCAL_VERSION"
+            git config --global user.email "chloeleo44@hotmail.com"
+            git config --global user.name "chloe-leonard337"
+            npm run build-npm-ci
+            npm version patch
+            npm publish
+            git add .
+            git commit -m "updated version"
+            git push
+          else
+            echo "Version already published, skipping"
+            exit 0
+          fi
+          
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: my-app
+          build: npm run build
+          start: npm run start
+
+      - name: Upload coverage reports to codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+          
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: my-app/build
+
+  build-docker:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+
+      - name: Lancement docker compose
+        env:
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        run: |
+          cd my-app
+          npm i
+          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > mysql.env
+          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> mysql.env
+          
+
+          
+          echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" > api.env
+          echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> api.env
+          echo "MYSQL_USER=$MYSQL_USER" >> api.env
+          echo "MYSQL_HOST=$MYSQL_HOST" >> api.env
+          docker compose up -d --build
+          sleep 120
+
+      - name: check status container
+        run: |
+          cd my-app
+          docker ps -a
+          docker logs my-app-frontend-1
+
+      - name: Check API /users endpoint  
+        run: |
+          for i in {1..12}; do
+            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:8000/users || echo "000")
+            echo "Tentative $i: status $STATUS"
+            [[ "$STATUS" == "200" ]] && exit 0
+            sleep 10
+          done
+          echo " /users never returned 200"
+          exit 1
+
+      - name: Check adminer endpoint
+        run: |
+          for i in {1..12}; do
+            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:8080 || echo "000")
+            echo "Adminer tentative $i: status $STATUS"
+            [[ "$STATUS" == "200" ]] && exit 0
+            sleep 5   
+          done
+          echo " Adminer never returned 200"
+          exit 1
+
+
+      - name: Check app status 200
+        run: |
+          for i in {1..30}; do
+            STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3000 || echo %{http_code})
+            echo "App tentative $i: status $STATUS"
+            if [[ "$STATUS" == "200" ]] || [[ "$STATUS" == "304" ]]; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "App never returned 200/304"
+          exit 1
+                    
+      - name: Check users exist
+        run: curl -s http://localhost:8000/users | jq -e '.utilisateurs | length > 0' || exit 1
+
+      - name: Publish to Docker Hub
+        if: success() 
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          cd ./my-app/api
+          echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker build -t "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}" .
+          docker push "$DOCKERHUB_USERNAME/ynov-ci-cd-api:${{ github.sha }}"
+          
+      - name: Run Cypress E2E on docker compose
+        run: |
+          cd my-app
+          docker ps  
+
+          npx cypress run --expose grepTags="classic doublon 400Error"
+
+          docker compose down api
+          npx cypress run --expose grepTags='500Error'
+
+
+  deploy:
+    needs: [build-and-test, build-docker]  
+    permissions: 
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment: 
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

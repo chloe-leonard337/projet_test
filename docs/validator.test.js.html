@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: validator.test.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: validator.test.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { validateForm } from "./validator";
+
+/**
+ * @function validateForm
+ * Tests unitaires pour la fonction validateForm
+ */
+
+describe('validateForm', () => {
+
+    // Tous les paramètres sont valides
+    it('should return true if all parameters are valid', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(validateForm(age, postalCode, identity, email)).toBe(true);
+    });
+    
+    // L'utilisateur a moins de 18 ans
+    it('should throw an error if user is under 18 years old', () => {
+        const age = { birth: new Date("01/01/2015") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('user should be at least 18 years old');
+    });
+
+    // L'utilisateur a exactement 18 ans
+    it('should validate if user is exactly 18 years old', () => {
+        const age = { birth: new Date(new Date().setFullYear(new Date().getFullYear() - 18)) };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(validateForm(age, postalCode, identity, email)).toBe(true);
+    });
+
+    // L'utilisateur a plus de 18 ans
+    it('should validate if user is over 18 years old', () => {
+        const age = { birth: new Date("01/01/1990") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(validateForm(age, postalCode, identity, email)).toBe(true);
+    });
+
+    // Le code postal est invalide
+    it('should throw an error if postal code is invalid', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '7500A';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('postal code is invalid');
+    });
+
+    // Le code postal est vide
+    it('should throw an error if postal code is empty', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('postal code is invalid');
+    });
+
+    // Le code postal est valide
+    it('should validate correct postal code', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloe@example.com';
+        expect(validateForm(age, postalCode, identity, email)).toBe(true);
+    });
+
+    // L'identité est invalide
+    it('should throw an error if identity is invalid', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé123'
+        };
+        const email = 'chloe@example.com';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('identity is invalid');
+    });
+
+    // L'identité est vide
+    it('should throw an error if identity is empty', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '75001';
+        const identity = {
+            name: ''
+        };
+        const email = 'chloe@example.com';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('identity is invalid');
+    });
+
+    // L'identité est valide
+    it('should validate correct identity', () => {
+        const age = { birth: new Date('2000-01-01') };
+        const postalCode = '75001';
+        const identity = { name: 'Chloé' };
+        const email = 'chloe@example.com';
+        expect(validateForm(age, postalCode, identity, email)).toBe(true);
+    });
+
+    // L'email est invalide
+    it('should throw an error if email is invalid', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = 'chloeexample.com';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('email is invalid');
+    });
+
+    // L'email est vide
+    it('should throw an error if email is empty', () => {
+        const age = { birth: new Date("01/01/2000") };
+        const postalCode = '75001';
+        const identity = {
+            name: 'Chloé'
+        };
+        const email = '';
+        expect(() => validateForm(age, postalCode, identity, email)).toThrow('email is invalid');
+    });
+
+    // L'email est valide
+    it('should validate correct email', () => {
+        const age = { birth: new Date('2000-01-01') };
+        const postalCode = '75001';
+        const identity = { name: 'Chloé' };
+        const email = 'chloe@example.com';
+        expect(validateForm(age, postalCode, identity, email)).toBe(true);
+    });
+
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calculateAge">calculateAge</a></li><li><a href="global.html#calculateAgeTestsunitairespourlafonctioncalculateAgeLafonctiondoitretournerl'%25C3%25A2ged'unepersonneenann%25C3%25A9es,enfonctiondesadatedenaissance.">calculateAgeTests unitaires pour la fonction calculateAgeLa fonction doit retourner l'âge d'une personne en années, en fonction de sa date de naissance.</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateFormTestsunitairespourlafonctionvalidateForm">validateFormTests unitaires pour la fonction validateForm</a></li><li><a href="global.html#validatePostalCode">validatePostalCode</a></li><li><a href="global.html#validatePostalCodeTestsunitairespourlavalidationducodepostal">validatePostalCodeTests unitaires pour la validation du code postal</a></li><li><a href="global.html#verifyIdentityTestsunitairespourlafonctionverifyIdentity">verifyIdentityTests unitaires pour la fonction verifyIdentity</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Feb 06 2026 16:29:03 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+/* ── Variables ──────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:         #f5f4f0;
+  --surface:    #ffffff;
+  --border:     #e2e0d8;
+  --text:       #1a1916;
+  --text-muted: #8a887e;
+  --accent:     #2d5a27;
+  --accent-light: #e8f0e7;
+  --error:      #c0392b;
+  --error-light: #fdf0ef;
+  --radius:     10px;
+  --shadow:     0 2px 16px rgba(0,0,0,0.07);
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Page layout ────────────────────────────────────────── */
+.App {
+  min-height: 100vh;
+  background-color: var(--bg);
+  font-family: 'Sora', sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 5rem;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.Home-header {
+  width: 100%;
+  max-width: 540px;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
+}
+
+.Home-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.Home-header h1::before {
+  content: '›';
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  margin-right: 0.5rem;
+}
+
+/* ── Error alert ────────────────────────────────────────── */
+.error-alert {
+  width: 100%;
+  max-width: 540px;
+  background: var(--error-light) !important;
+  border: 1px solid var(--error) !important;
+  border-left: 4px solid var(--error) !important;
+  border-radius: var(--radius) !important;
+  color: var(--error) !important;
+  padding: 0.875rem 1rem !important;
+  margin-bottom: 1.5rem !important;
+  font-size: 0.875rem;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Form card ──────────────────────────────────────────── */
+form,
+.form-card {
+  width: 100%;
+  max-width: 540px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Field group ────────────────────────────────────────── */
+.field-group,
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Inputs ─────────────────────────────────────────────── */
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+input {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.925rem;
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+  background: var(--surface);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ── 2-column row ───────────────────────────────────────── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ── Submit button ──────────────────────────────────────── */
+button[type="submit"],
+.btn-submit {
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.01em;
+}
+
+button[type="submit"]:hover,
+.btn-submit:hover {
+  background: #234a1e;
+}
+
+button[type="submit"]:active,
+.btn-submit:active {
+  transform: scale(0.98);
+}
+
+button[type="submit"]:disabled,
+.btn-submit:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Loading spinner on button ──────────────────────────── */
+button[type="submit"].loading::after,
+.btn-submit.loading::after {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-left: 0.6rem;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Toast overrides ────────────────────────────────────── */
+.Toastify__toast {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.875rem !important;
+  border-radius: var(--radius) !important;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .App {
+    padding: 2rem 1rem 4rem;
+  }
+
+  form,
+  .form-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
